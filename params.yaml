@@ -1,0 +1,65 @@
+extraction:
+  model: "claude-sonnet-4-6"
+  max_tokens: 16384
+  effort_level: "medium"
+  chunk_size: 1024
+  chunk_overlap: 128
+  batch_size: 8
+  max_concurrency: 4
+  confidence_threshold: 0.70
+  entity_types:
+    - ORGANIZATION
+    - PERSON
+    - LOCATION
+    - PRODUCT
+    - EVENT
+    - FINANCIAL_METRIC
+    - DATE
+    - TECHNOLOGY
+
+graph:
+  neo4j_uri: "bolt://localhost:7687"
+  neo4j_user: "neo4j"
+  neo4j_password: "graphrag_password"
+  neo4j_database: "neo4j"
+  max_connection_pool_size: 50
+  connection_acquisition_timeout: 60
+
+community:
+  resolution: 1.0
+  n_iterations: 10
+  random_seed: 42
+  summary_model: "claude-sonnet-4-6"
+  summary_effort: "low"
+  min_community_size: 3
+  max_communities_to_summarize: 500
+
+retrieval:
+  embedding_model: "text-embedding-3-small"
+  embedding_dim: 1536
+  top_k_vector: 10
+  top_k_graph: 5
+  graph_traversal_depth: 2
+  hybrid_vector_weight: 0.4
+  hybrid_graph_weight: 0.6
+  faiss_index_path: "artifacts/faiss_index.bin"
+  faiss_id_map_path: "artifacts/faiss_id_map.json"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  streaming_chunk_size: 50
+  request_timeout: 120
+
+mlflow:
+  tracking_uri: "http://localhost:5001"
+  experiment_name: "graphrag_experiments"
+
+qa_model:
+  model: "claude-sonnet-4-6"
+  max_tokens: 64000
+  effort_level: "high"
+
+evaluation:
+  multihop_accuracy_threshold: 0.70
+  eval_sample_size: 50

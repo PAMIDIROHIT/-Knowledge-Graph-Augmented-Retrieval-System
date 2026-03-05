@@ -1,0 +1,139 @@
+name: GraphRAG CI
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main"]
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    services:
+      neo4j:
+        image: neo4j:5.15-community
+        env:
+          NEO4J_AUTH: "neo4j/graphrag_password"
+        ports:
+          - 7687:7687
+          - 7474:7474
+        options: >-
+          --health-cmd "curl -f http://localhost:7474"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests
+        env:
+          NEO4J_URI: bolt://localhost:7687
+          NEO4J_USER: neo4j
+          NEO4J_PASSWORD: graphrag_password
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          pytest tests/ \
+            --tb=short \
+            -v \
+            --cov=src \
+            --cov-report=xml \
+            --cov-report=term-missing \
+            -x
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.xml
+          fail_ci_if_error: false
+
+  quality-gate:
+    name: Multi-hop Accuracy Quality Gate
+    runs-on: ubuntu-latest
+    needs: test
+    # Only run on main branch pushes (not every PR to save API costs)
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    services:
+      neo4j:
+        image: neo4j:5.15-community
+        env:
+          NEO4J_AUTH: "neo4j/graphrag_password"
+        ports:
+          - 7687:7687
+          - 7474:7474
+        options: >-
+          --health-cmd "curl -f http://localhost:7474"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Pull DVC artifacts
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: dvc pull --run-cache || echo "DVC pull skipped (no remote configured)"
+
+      - name: Run multi-hop QA benchmark
+        env:
+          NEO4J_URI: bolt://localhost:7687
+          NEO4J_USER: neo4j
+          NEO4J_PASSWORD: graphrag_password
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI || 'sqlite:///mlflow.db' }}
+        run: |
+          python eval/multihop_qa.py \
+            --output artifacts/benchmark_results.json \
+            --strategies standard_rag,hybrid
+
+      - name: Check quality gate (multi_hop_accuracy >= 0.70)
+        run: |
+          python - <<'EOF'
+          import json, sys
+          results = json.load(open("artifacts/benchmark_results.json"))
+          hybrid = results.get("hybrid", {})
+          accuracy = hybrid.get("multi_hop_accuracy", 0.0)
+          threshold = 0.70
+          print(f"MultiHop Accuracy: {accuracy:.4f} (threshold: {threshold})")
+          if accuracy < threshold:
+              print(f"QUALITY GATE FAILED: {accuracy:.4f} < {threshold}")
+              sys.exit(1)
+          print(f"QUALITY GATE PASSED: {accuracy:.4f} >= {threshold}")
+          EOF
+
+      - name: Archive benchmark results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results
+          path: artifacts/benchmark_results.json

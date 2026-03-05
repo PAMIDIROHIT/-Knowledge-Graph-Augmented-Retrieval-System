@@ -1,0 +1,74 @@
+stages:
+  ingest:
+    cmd: python pipelines/ingest.py --input data/raw --output data/processed
+    deps:
+      - pipelines/ingest.py
+      - data/raw
+    params:
+      - extraction.chunk_size
+      - extraction.chunk_overlap
+    outs:
+      - data/processed/chunks.json
+    metrics:
+      - data/processed/ingest_metrics.json:
+          cache: false
+
+  extract:
+    cmd: python pipelines/extract.py --input data/processed/chunks.json --output data/processed
+    deps:
+      - pipelines/extract.py
+      - src/extraction/entity_extractor.py
+      - src/extraction/prompts.py
+      - src/extraction/schema.py
+      - data/processed/chunks.json
+    params:
+      - extraction.model
+      - extraction.max_tokens
+      - extraction.effort_level
+      - extraction.batch_size
+      - extraction.max_concurrency
+      - extraction.confidence_threshold
+    outs:
+      - data/processed/entities.json
+      - data/processed/relations.json
+    metrics:
+      - data/processed/extraction_metrics.json:
+          cache: false
+
+  build_graph:
+    cmd: python pipelines/build_graph.py --entities data/processed/entities.json --relations data/processed/relations.json
+    deps:
+      - pipelines/build_graph.py
+      - src/graph/neo4j_client.py
+      - src/graph/networkx_builder.py
+      - src/graph/community.py
+      - data/processed/entities.json
+      - data/processed/relations.json
+    params:
+      - graph.neo4j_uri
+      - graph.neo4j_user
+      - community.resolution
+      - community.n_iterations
+      - community.min_community_size
+    outs:
+      - artifacts/networkx_graph.pkl
+      - artifacts/communities.json
+    metrics:
+      - data/processed/graph_metrics.json:
+          cache: false
+
+  index:
+    cmd: python pipelines/index.py --entities data/processed/entities.json --output artifacts/
+    deps:
+      - pipelines/index.py
+      - src/graph/indexer.py
+      - data/processed/entities.json
+    params:
+      - retrieval.embedding_model
+      - retrieval.embedding_dim
+    outs:
+      - artifacts/faiss_index.bin
+      - artifacts/faiss_id_map.json
+    metrics:
+      - data/processed/index_metrics.json:
+          cache: false

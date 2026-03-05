@@ -1,0 +1,59 @@
+# Core LLM & AI
+anthropic>=0.40.0
+openai>=1.0.0
+
+# Graph databases and algorithms
+neo4j>=5.0.0
+networkx>=3.0
+graspologic>=3.3.0
+
+# Vector search
+faiss-cpu>=1.7.4
+numpy>=1.24.0
+
+# FastAPI and serving
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+sse-starlette>=1.6.5
+httpx>=0.27.0
+
+# Data validation
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# MLOps
+mlflow>=2.9.0
+dvc>=3.30.0
+
+# Evaluation
+datasets>=2.16.0
+ragas>=0.1.7
+
+# Prometheus metrics
+prometheus-client>=0.19.0
+prometheus-fastapi-instrumentator>=6.1.0
+
+# Text processing and embeddings
+tiktoken>=0.6.0
+sentence-transformers>=2.3.0
+
+# Pipeline utilities
+tenacity>=8.2.3
+structlog>=24.1.0
+python-dotenv>=1.0.0
+click>=8.1.7
+rich>=13.7.0
+tqdm>=4.66.0
+aiofiles>=23.2.1
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0
+pytest-mock>=3.12.0
+respx>=0.20.0
+
+# Data I/O
+pandas>=2.0.0
+pyarrow>=14.0.0
+orjson>=3.9.0
