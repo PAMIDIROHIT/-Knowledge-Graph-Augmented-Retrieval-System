@@ -75,7 +75,11 @@ class LocalSearcher:
         source_chunk_ids: set[str] = set()
 
         for rank, (entity_id, score) in enumerate(entity_hits[:self.top_k_graph]):
-            neighborhood = self.neo4j.get_entity_neighborhood(entity_id, depth=depth)
+            try:
+                neighborhood = self.neo4j.get_entity_neighborhood(entity_id, depth=depth)
+            except Exception:
+                # Neo4j unavailable — return minimal node so FAISS results surface
+                neighborhood = {"nodes": [{"id": entity_id}], "edges": []}
 
             for node in neighborhood.get("nodes", []):
                 nid = node.get("id", "")

@@ -40,13 +40,24 @@ def main(input_file: str, output_dir: str) -> None:
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
 
+    # Load .env if present
+    env_path = Path(".env")
+    if env_path.exists():
+        for line in env_path.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, _, v = line.partition("=")
+            if k.strip() and k.strip() not in os.environ:
+                os.environ[k.strip()] = v.strip()
+
     # Load chunks
     raw_chunks = json.loads(Path(input_file).read_text())
     chunks = [DocumentChunk(**c) for c in raw_chunks]
     logger.info("chunks_loaded", count=len(chunks))
 
     extractor = EntityExtractor(
-        model=ext_cfg.get("model", "claude-sonnet-4-6"),
+        model=ext_cfg.get("model", "grok-3"),
         max_tokens=int(ext_cfg.get("max_tokens", 16384)),
         effort_level=ext_cfg.get("effort_level", "medium"),
         confidence_threshold=float(ext_cfg.get("confidence_threshold", 0.70)),

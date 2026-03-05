@@ -1,6 +1,6 @@
 """
 Hybrid retriever: routes queries between local/global search strategies
-and fuses their scores for a combined ranking.
+and fuses their scores for a combined ranking. Uses Grok (xAI) for QA.
 """
 
 from __future__ import annotations
@@ -9,7 +9,7 @@ import re
 import time
 from typing import Any, Optional
 
-import anthropic
+import openai
 import structlog
 
 from src.extraction.prompts import QA_SYSTEM_PROMPT, QA_USER_TEMPLATE
@@ -81,7 +81,7 @@ def _build_evidence_text(local_ctx: dict, global_ctx: dict) -> str:
 class HybridRetriever:
     """
     Routes queries to the appropriate retrieval strategy and generates answers
-    using claude-sonnet-4-6 with high effort adaptive thinking.
+    using Grok-3 via xAI API.
     """
 
     def __init__(
@@ -93,8 +93,8 @@ class HybridRetriever:
         traversal_depth: int = 2,
         vector_weight: float = 0.4,
         graph_weight: float = 0.6,
-        qa_model: str = "claude-sonnet-4-6",
-        qa_max_tokens: int = 64000,
+        qa_model: str = "grok-3",
+        qa_max_tokens: int = 16384,
         api_key: Optional[str] = None,
     ) -> None:
         self.local = LocalSearcher(
@@ -110,7 +110,11 @@ class HybridRetriever:
         )
         self.qa_model = qa_model
         self.qa_max_tokens = qa_max_tokens
-        self._client = anthropic.Anthropic(api_key=api_key)
+        import os
+        self._client = openai.OpenAI(
+            api_key=api_key or os.environ.get("GROK_API_KEY"),
+            base_url="https://api.x.ai/v1",
+        )
 
     def retrieve(self, question: str, mode: str = "auto") -> dict[str, Any]:
         """Run retrieval and return structured context."""
@@ -159,16 +163,15 @@ class HybridRetriever:
         )
 
         try:
-            response = self._client.messages.create(
+            response = self._client.chat.completions.create(
                 model=self.qa_model,
                 max_tokens=self.qa_max_tokens,
-                thinking={"type": "adaptive"},
-                system=QA_SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": qa_prompt}],
+                messages=[
+                    {"role": "system", "content": QA_SYSTEM_PROMPT},
+                    {"role": "user", "content": qa_prompt},
+                ],
             )
-            raw = "\n".join(
-                block.text for block in response.content if hasattr(block, "text")
-            ).strip()
+            raw = (response.choices[0].message.content or "").strip()
 
             import json
             import re as _re
@@ -209,11 +212,13 @@ class HybridRetriever:
             graph_nodes=", ".join(ctx["graph_nodes_traversed"][:20]) or "none",
         )
 
-        with self._client.messages.stream(
+        with self._client.chat.completions.stream(
             model=self.qa_model,
             max_tokens=self.qa_max_tokens,
-            system=QA_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": qa_prompt}],
+            messages=[
+                {"role": "system", "content": QA_SYSTEM_PROMPT},
+                {"role": "user", "content": qa_prompt},
+            ],
         ) as stream:
             for text in stream.text_stream:
                 yield text

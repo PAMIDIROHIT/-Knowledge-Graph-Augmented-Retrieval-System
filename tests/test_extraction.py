@@ -268,9 +268,7 @@ class TestEntityExtractor:
         """Test that extract_chunk returns an ExtractionResult even with mocked API."""
         extractor = EntityExtractor(api_key="test_key")
 
-        mock_response = MagicMock()
-        mock_block = MagicMock()
-        mock_block.text = json.dumps({
+        json_payload = json.dumps({
             "entities": [{
                 "id": "ent_chunk_001_001",
                 "name": "Microsoft",
@@ -283,9 +281,11 @@ class TestEntityExtractor:
             }],
             "relations": [],
         })
-        mock_response.content = [mock_block]
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[0].message.content = json_payload
 
-        with patch.object(extractor._client.messages, 'create', new_callable=AsyncMock) as mock_create:
+        with patch.object(extractor._client.chat.completions, 'create', new_callable=AsyncMock) as mock_create:
             mock_create.return_value = mock_response
             chunk = DocumentChunk(id="chunk_001", text="Microsoft is a tech company.", source_document="test.txt", chunk_index=0)
             result = await extractor.extract_chunk(chunk)
@@ -297,11 +297,11 @@ class TestEntityExtractor:
     @pytest.mark.asyncio
     async def test_extract_chunk_api_error_returns_empty(self):
         """API errors should return empty ExtractionResult, not raise."""
-        import anthropic
+        import openai
         extractor = EntityExtractor(api_key="test_key")
 
-        with patch.object(extractor._client.messages, 'create', new_callable=AsyncMock) as mock_create:
-            mock_create.side_effect = anthropic.APIConnectionError(request=MagicMock())
+        with patch.object(extractor._client.chat.completions, 'create', new_callable=AsyncMock) as mock_create:
+            mock_create.side_effect = openai.APIConnectionError(request=MagicMock())
             chunk = DocumentChunk(id="chunk_001", text="Test text.", source_document="test.txt", chunk_index=0)
             result = await extractor.extract_chunk(chunk)
 

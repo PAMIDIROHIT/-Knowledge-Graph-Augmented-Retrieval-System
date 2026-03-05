@@ -1,44 +1,48 @@
 """
 Node embedding and FAISS index builder.
-Embeds all Entity nodes using OpenAI text-embedding-3-small,
+Embeds all Entity nodes using sentence-transformers (all-MiniLM-L6-v2),
 builds a FAISS index, and saves to artifacts/.
 """
 
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from typing import Any, Optional
 
 import faiss
 import numpy as np
 import structlog
-from openai import OpenAI
 
 logger = structlog.get_logger(__name__)
 
-EMBEDDING_DIM = 1536  # text-embedding-3-small output dimension
+EMBEDDING_DIM = 384  # all-MiniLM-L6-v2 output dimension
+
+# Cache the encoder so we don't reload the model on every call
+_encoder_cache: dict[str, Any] = {}
 
 
 def embed_texts(
     texts: list[str],
-    model: str = "text-embedding-3-small",
-    batch_size: int = 100,
-    api_key: Optional[str] = None,
+    model: str = "all-MiniLM-L6-v2",
+    batch_size: int = 64,
+    api_key: Optional[str] = None,  # kept for API compatibility, unused
 ) -> np.ndarray:
-    """Embed a list of texts using OpenAI embeddings API in batches."""
-    client = OpenAI(api_key=api_key or os.environ.get("OPENAI_API_KEY"))
-    all_embeddings: list[list[float]] = []
+    """Embed a list of texts using a local sentence-transformers model."""
+    from sentence_transformers import SentenceTransformer  # type: ignore[import]
 
-    for i in range(0, len(texts), batch_size):
-        batch = texts[i : i + batch_size]
-        response = client.embeddings.create(model=model, input=batch)
-        batch_embeddings = [e.embedding for e in sorted(response.data, key=lambda x: x.index)]
-        all_embeddings.extend(batch_embeddings)
-        logger.debug("embeddings_batch_done", progress=i + len(batch), total=len(texts))
+    if model not in _encoder_cache:
+        logger.info("loading_sentence_transformer", model=model)
+        _encoder_cache[model] = SentenceTransformer(model)
+    encoder = _encoder_cache[model]
 
-    return np.array(all_embeddings, dtype=np.float32)
+    embeddings = encoder.encode(
+        texts,
+        batch_size=batch_size,
+        show_progress_bar=False,
+        normalize_embeddings=True,
+    )
+    return np.array(embeddings, dtype=np.float32)
 
 
 class GraphIndexer:
@@ -51,7 +55,7 @@ class GraphIndexer:
         self,
         index_path: str = "artifacts/faiss_index.bin",
         id_map_path: str = "artifacts/faiss_id_map.json",
-        embedding_model: str = "text-embedding-3-small",
+        embedding_model: str = "all-MiniLM-L6-v2",
         embedding_dim: int = EMBEDDING_DIM,
         api_key: Optional[str] = None,
     ) -> None:

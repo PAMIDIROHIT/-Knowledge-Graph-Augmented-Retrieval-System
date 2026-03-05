@@ -1,17 +1,18 @@
 """
-LLM-based entity and relation extractor using Anthropic claude-sonnet-4-6.
-Uses adaptive thinking for extraction reliability and async batch processing.
+LLM-based entity and relation extractor using Grok (xAI) via OpenAI-compatible API.
+Uses async batch processing for extraction reliability.
 """
 
 from __future__ import annotations
 
 import asyncio
 import json
+import os
 import re
 import time
 from typing import Optional
 
-import anthropic
+import openai
 import structlog
 
 from src.extraction.prompts import (
@@ -142,13 +143,13 @@ def _parse_extraction_response(
 
 class EntityExtractor:
     """
-    Async entity and relation extractor using Anthropic claude-sonnet-4-6.
-    Supports adaptive thinking and configurable concurrency.
+    Async entity and relation extractor using Grok-3 via xAI API.
+    Supports configurable concurrency.
     """
 
     def __init__(
         self,
-        model: str = "claude-sonnet-4-6",
+        model: str = "grok-3",
         max_tokens: int = 16384,
         effort_level: str = "medium",
         confidence_threshold: float = 0.70,
@@ -161,7 +162,10 @@ class EntityExtractor:
         self.confidence_threshold = confidence_threshold
         self.max_concurrency = max_concurrency
         self._semaphore = asyncio.Semaphore(max_concurrency)
-        self._client = anthropic.AsyncAnthropic(api_key=api_key)
+        self._client = openai.AsyncOpenAI(
+            api_key=api_key or os.environ.get("GROK_API_KEY"),
+            base_url="https://api.x.ai/v1",
+        )
 
     async def extract_chunk(self, chunk: DocumentChunk) -> ExtractionResult:
         """Extract entities and relations from a single document chunk."""
@@ -174,16 +178,17 @@ class EntityExtractor:
         start = time.monotonic()
         async with self._semaphore:
             try:
-                response = await self._client.messages.create(
+                response = await self._client.chat.completions.create(
                     model=self.model,
                     max_tokens=self.max_tokens,
-                    thinking={"type": "adaptive"},
-                    system=EXTRACTION_SYSTEM_PROMPT,
-                    messages=[{"role": "user", "content": prompt}],
+                    messages=[
+                        {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
+                        {"role": "user", "content": prompt},
+                    ],
                 )
-            except anthropic.APIStatusError as exc:
+            except openai.APIStatusError as exc:
                 logger.error(
-                    "anthropic_api_error",
+                    "grok_api_error",
                     chunk_id=chunk.id,
                     status=exc.status_code,
                     message=str(exc),
@@ -193,8 +198,8 @@ class EntityExtractor:
                     model_used=self.model,
                     extraction_latency_ms=0.0,
                 )
-            except anthropic.APIConnectionError as exc:
-                logger.error("anthropic_connection_error", chunk_id=chunk.id, error=str(exc))
+            except openai.APIConnectionError as exc:
+                logger.error("grok_connection_error", chunk_id=chunk.id, error=str(exc))
                 return ExtractionResult(
                     chunk_id=chunk.id,
                     model_used=self.model,
@@ -203,12 +208,7 @@ class EntityExtractor:
 
         latency_ms = (time.monotonic() - start) * 1000
 
-        # Extract text content blocks (skip thinking blocks)
-        raw_text = "\n".join(
-            block.text
-            for block in response.content
-            if hasattr(block, "text")
-        )
+        raw_text = response.choices[0].message.content or ""
 
         entities, relations = _parse_extraction_response(
             raw_json=raw_text,

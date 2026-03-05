@@ -6,6 +6,8 @@ then supplements with high-confidence entity chunks.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any, Optional
 
 import structlog
@@ -14,6 +16,17 @@ from src.graph.indexer import GraphIndexer
 from src.graph.neo4j_client import Neo4jClient
 
 logger = structlog.get_logger(__name__)
+
+_COMMUNITY_CACHE: dict[str, dict] = {}  # community_id → community data
+
+
+def _load_community_cache(artifacts_dir: str = "artifacts") -> None:
+    """Load communities.json into memory once for Neo4j-less fallback."""
+    path = Path(artifacts_dir) / "communities.json"
+    if not path.exists() or _COMMUNITY_CACHE:
+        return
+    for comm in json.loads(path.read_text()):
+        _COMMUNITY_CACHE[comm["id"]] = comm
 
 
 class GlobalSearcher:
@@ -37,6 +50,7 @@ class GlobalSearcher:
         self.top_k_communities = top_k_communities
         self.supplement_with_entities = supplement_with_entities
         self.top_k_entity_supplement = top_k_entity_supplement
+        _load_community_cache()
 
     def search(
         self,
@@ -66,15 +80,20 @@ class GlobalSearcher:
                 "community_ids": [],
             }
 
-        # Step 2: Fetch community data from Neo4j
+        # Step 2: Fetch community data from Neo4j (fallback to communities.json)
         communities: list[dict] = []
         for comm_id, score in community_hits:
-            results = self.neo4j.run_cypher(
-                "MATCH (c:Community {id: $id}) RETURN c LIMIT 1",
-                {"id": comm_id},
-            )
-            if results and results[0].get("c"):
-                comm_data = dict(results[0]["c"])
+            try:
+                results = self.neo4j.run_cypher(
+                    "MATCH (c:Community {id: $id}) RETURN c LIMIT 1",
+                    {"id": comm_id},
+                )
+                comm_data = dict(results[0]["c"]) if results and results[0].get("c") else None
+            except Exception:
+                comm_data = None
+            if comm_data is None:
+                comm_data = dict(_COMMUNITY_CACHE.get(comm_id, {}))
+            if comm_data:
                 comm_data["_search_score"] = score
                 communities.append(comm_data)
                 reasoning_path.append(
@@ -82,7 +101,7 @@ class GlobalSearcher:
                     f"[score={score:.3f}] size={comm_data.get('size', '?')}"
                 )
 
-        # Step 3: Supplemental entity search if requested
+        # Step 3: Supplemental entity search if requested (skip Neo4j if unavailable)
         supplemental_entities: list[dict] = []
         if self.supplement_with_entities and communities:
             entity_hits = [
@@ -92,12 +111,15 @@ class GlobalSearcher:
             ][:self.top_k_entity_supplement]
 
             for ent_id, _ in entity_hits:
-                ent_results = self.neo4j.run_cypher(
-                    "MATCH (e:Entity {id: $id}) RETURN e LIMIT 1",
-                    {"id": ent_id},
-                )
-                if ent_results and ent_results[0].get("e"):
-                    supplemental_entities.append(dict(ent_results[0]["e"]))
+                try:
+                    ent_results = self.neo4j.run_cypher(
+                        "MATCH (e:Entity {id: $id}) RETURN e LIMIT 1",
+                        {"id": ent_id},
+                    )
+                    if ent_results and ent_results[0].get("e"):
+                        supplemental_entities.append(dict(ent_results[0]["e"]))
+                except Exception:
+                    supplemental_entities.append({"id": ent_id})
 
             reasoning_path.append(
                 f"VECTOR SEARCH: Supplemented with {len(supplemental_entities)} entity chunks"

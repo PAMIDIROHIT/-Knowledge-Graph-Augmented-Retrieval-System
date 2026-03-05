@@ -1,0 +1,112 @@
+[
+  {
+    "id": "chunk_61ccae30",
+    "text": "OpenAI was founded in 2015 by Elon Musk, Sam Altman, Greg Brockman, Ilya Sutskever, Wojciech Zaremba, and John Schulman. The organization is headquartered in San Francisco, California. OpenAI's mission is to ensure that artificial general intelligence benefits all of humanity. Sam Altman serves as the Chief Executive Officer of OpenAI. Greg Brockman is the President and co-founder. Ilya Sutskever co-founded OpenAI and served as Chief Scientist before departing in 2024 to start Safe Superintelligence Inc. OpenAI released GPT-4 in March 2023, a large multimodal model that accepts image and text inputs and produces text outputs. GPT-4 demonstrated human-level performance on various professional and academic benchmarks. OpenAI also released ChatGPT in November 2022, which became the fastest-growing consumer application in history, reaching 100 million users in two months. ChatGPT is powered by GPT-3.5 and later GPT-4 models. OpenAI received a major investment from Microsoft in January 2023.",
+    "source_document": "ai_companies.txt",
+    "chunk_index": 0,
+    "metadata": {
+      "file": "data/raw/ai_companies.txt",
+      "size": 1001
+    }
+  },
+  {
+    "id": "chunk_5f8a1288",
+    "text": "ChatGPT is powered by GPT-3.5 and later GPT-4 models. OpenAI received a major investment from Microsoft in January 2023. Microsoft invested approximately $10 billion in OpenAI, extending their partnership that began in 2019. Microsoft integrated OpenAI technology into Azure OpenAI Service, Bing Search, and Microsoft 365 Copilot. Microsoft's CEO Satya Nadella described the partnership as transformative for the future of productivity software. Anthropic is an AI safety company founded in 2021 by Dario Amodei, Daniela Amodei, Tom Brown, Chris Olah, Sam McCandlish, Jack Clark, and Jared Kaplan. Several founders previously worked at OpenAI. Anthropic is headquartered in San Francisco. Dario Amodei is the CEO of Anthropic and Daniela Amodei is the President. Anthropic raised over $7.3 billion in funding by 2024 from investors including Google, Amazon, and Spark Capital. Anthropic developed Claude, a family of AI assistants.",
+    "source_document": "ai_companies.txt",
+    "chunk_index": 1,
+    "metadata": {
+      "file": "data/raw/ai_companies.txt",
+      "size": 931
+    }
+  },
+  {
+    "id": "chunk_5bd28648",
+    "text": "Anthropic developed Claude, a family of AI assistants. Claude 3 was released in March 2024 with three variants: Claude 3 Haiku (fastest), Claude 3 Sonnet (balanced), and Claude 3 Opus (most capable). Claude 3 Opus outperformed GPT-4 on several benchmarks including graduate-level reasoning and undergraduate-level knowledge tasks. Anthropic uses Constitutional AI training methodology to make Claude helpful, harmless, and honest. Amazon Web Services invested $4 billion in Anthropic in 2023, making it one of the largest AI investments in history. Anthropic's models are available through Amazon Bedrock, AWS's managed AI service. Google DeepMind is an AI research laboratory headquartered in London, England. It was formed in April 2023 through the merger of Google Brain and DeepMind. Demis Hassabis is the CEO and co-founder of Google DeepMind. Jeff Dean, formerly the head of Google Brain, serves as Chief Scientist at Google. Google DeepMind developed AlphaFold, a system that predicts protein structures with atomic accuracy.",
+    "source_document": "ai_companies.txt",
+    "chunk_index": 2,
+    "metadata": {
+      "file": "data/raw/ai_companies.txt",
+      "size": 1032
+    }
+  },
+  {
+    "id": "chunk_b9ce4aa7",
+    "text": "Google DeepMind developed AlphaFold, a system that predicts protein structures with atomic accuracy. AlphaFold 2 solved a 50-year-old problem in biology. Google DeepMind released Gemini in December 2023, a multimodal AI model family. Gemini Ultra, the most capable variant, outperformed GPT-4 on the MMLU benchmark. Meta AI Research is the artificial intelligence research division of Meta Platforms, formerly known as Facebook. Yann LeCun is Meta's Chief AI Scientist. Meta AI released LLaMA (Large Language Model Meta AI) in February 2023 as an open-source foundation model. LLaMA 2 was released in July 2023 in partnership with Microsoft and is available commercially. Llama 3, released in April 2024, achieved performance comparable to GPT-4 through Meta's scaling improvements. Meta AI also developed Segment Anything Model (SAM) for image segmentation. xAI is an artificial intelligence company founded by Elon Musk in March 2023. xAI is headquartered in San Francisco, California. Elon Musk is the founder and CEO of xAI.",
+    "source_document": "ai_companies.txt",
+    "chunk_index": 3,
+    "metadata": {
+      "file": "data/raw/ai_companies.txt",
+      "size": 1028
+    }
+  },
+  {
+    "id": "chunk_08bb2476",
+    "text": "xAI is headquartered in San Francisco, California. Elon Musk is the founder and CEO of xAI. The company developed Grok, a conversational AI model. Grok-1 was released in November 2023 as a 314-billion-parameter mixture-of-experts model. Grok was trained on data from X (formerly Twitter) which gives it real-time information capabilities. xAI raised $6 billion in May 2024 at a valuation of $24 billion. Mistral AI is a French artificial intelligence company founded in April 2023 by Arthur Mensch, Guillaume Lample, and Timoth\u00e9e Lacroix. The founders previously worked at DeepMind and Meta. Mistral AI is headquartered in Paris, France. Mistral released the Mixtral 8x7B model in December 2023, a mixture-of-experts model that outperformed LLaMA 2 70B on most benchmarks. Mistral raised $415 million in a Series A round in June 2023. Mistral is backed by Andreessen Horowitz, Lightspeed Venture Partners, and General Catalyst.",
+    "source_document": "ai_companies.txt",
+    "chunk_index": 4,
+    "metadata": {
+      "file": "data/raw/ai_companies.txt",
+      "size": 927
+    }
+  },
+  {
+    "id": "chunk_d03ddc7e",
+    "text": "The Transformer architecture was introduced in the 2017 paper \"Attention Is All You Need\" by Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, and Polosukhin at Google Brain. The Transformer replaced recurrent neural networks with self-attention mechanisms, enabling significantly faster training through parallelization. The architecture consists of an encoder and decoder, each composed of stacked layers of multi-head attention and feed-forward networks. BERT (Bidirectional Encoder Representations from Transformers) was developed by Google AI Language and introduced in 2018. BERT uses the encoder portion of the Transformer and is pre-trained using masked language modeling and next sentence prediction. BERT achieved state-of-the-art results on eleven natural language processing tasks when released. Google deployed BERT to improve Google Search query understanding in 2019. Jacob Devlin led the BERT development team at Google. GPT (Generative Pre-trained Transformer) was developed by OpenAI.",
+    "source_document": "ai_technology.txt",
+    "chunk_index": 0,
+    "metadata": {
+      "file": "data/raw/ai_technology.txt",
+      "size": 1011
+    }
+  },
+  {
+    "id": "chunk_93a12641",
+    "text": "Jacob Devlin led the BERT development team at Google. GPT (Generative Pre-trained Transformer) was developed by OpenAI. GPT-1 was introduced in 2018. GPT-2 was released in 2019 with 1.5 billion parameters and was initially not fully released due to concerns about misuse. GPT-3 was released in 2020 with 175 billion parameters and demonstrated remarkable few-shot learning capabilities. The GPT series uses the decoder portion of the Transformer architecture trained with causal language modeling. Alec Radford was the lead researcher on the GPT papers at OpenAI. Retrieval-Augmented Generation (RAG) was introduced in the 2020 paper by Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich K\u00fcttler, Mike Lewis, Wen-tau Yih, Tim Rockt\u00e4schel, Sebastian Riedel, and Douwe Kiela from Facebook AI Research. RAG combines parametric memory (language model weights) with non-parametric memory (retrieval from a document store).",
+    "source_document": "ai_technology.txt",
+    "chunk_index": 1,
+    "metadata": {
+      "file": "data/raw/ai_technology.txt",
+      "size": 970
+    }
+  },
+  {
+    "id": "chunk_2a7cb21e",
+    "text": "RAG combines parametric memory (language model weights) with non-parametric memory (retrieval from a document store). RAG retrieves relevant documents using a dense retriever (DPR) and then generates answers using a seq2seq model. RAG reduces hallucination by grounding responses in retrieved evidence. GraphRAG was developed by Microsoft Research to address limitations of standard RAG. Standard RAG struggles with queries that require reasoning across multiple documents or understanding themes and patterns across a corpus. GraphRAG builds a knowledge graph from source documents by extracting entities and relationships, then uses community detection to identify themes. At query time, GraphRAG searches the knowledge graph and community summaries in addition to vector embeddings. The GraphRAG paper was authored by Darren Edge, Ha Trinh, Newman Cheng, Joshua Bradley, Alex Chao, Apurva Mody, Steven Truitt, and Jonathan Larson from Microsoft.",
+    "source_document": "ai_technology.txt",
+    "chunk_index": 2,
+    "metadata": {
+      "file": "data/raw/ai_technology.txt",
+      "size": 948
+    }
+  },
+  {
+    "id": "chunk_06fbdfcb",
+    "text": "FAISS (Facebook AI Similarity Search) is a library for efficient similarity search and clustering of dense vectors. It was developed by Facebook AI Research and released in 2017. FAISS supports billion-scale vector search. It provides multiple index types including HNSW (Hierarchical Navigable Small World), IVF (Inverted File Index), and Flat indexes. FAISS is written in C++ with Python bindings. Jeff Johnson and Matthijs Douze are key contributors to FAISS. FAISS uses inner product and L2 distance metrics for similarity computation. The Leiden algorithm for community detection was published in 2019 by Vincent Traag, Ludo Waltman, and Nees Jan van Eck. Leiden improves upon the Louvain algorithm by guaranteeing well-connected communities. It works by iteratively moving nodes to neighboring communities to maximize modularity, then aggregating communities into meta-nodes. Leiden is computationally efficient and produces better quality communities than Louvain for large graphs.",
+    "source_document": "ai_technology.txt",
+    "chunk_index": 3,
+    "metadata": {
+      "file": "data/raw/ai_technology.txt",
+      "size": 988
+    }
+  },
+  {
+    "id": "chunk_1ac5f952",
+    "text": "Leiden is computationally efficient and produces better quality communities than Louvain for large graphs. The graspologic library implements the Leiden algorithm in Python. LangChain is an open-source framework for building applications powered by language models. It was created by Harrison Chase and released in October 2022. LangChain provides abstractions for chains of LLM calls, retrieval-augmented generation, agents, and memory. LangChain is available in Python and JavaScript. The framework has become one of the most popular tools for LLM application development with over 80,000 GitHub stars. LangChain raised $25 million in a seed round in April 2023 led by Benchmark. LlamaIndex (formerly known as GPT Index) is a data framework for connecting custom data sources to large language models. It was created by Jerry Liu and released in November 2022. LlamaIndex provides tools for data ingestion, structuring, retrieval, and integration with LLM applications.",
+    "source_document": "ai_technology.txt",
+    "chunk_index": 4,
+    "metadata": {
+      "file": "data/raw/ai_technology.txt",
+      "size": 971
+    }
+  },
+  {
+    "id": "chunk_c6fca48f",
+    "text": "LlamaIndex provides tools for data ingestion, structuring, retrieval, and integration with LLM applications. LlamaIndex supports hundreds of data connectors and integrates with LangChain and other frameworks. LlamaIndex raised $8.5 million in a seed round in 2023. Hugging Face is a company that builds tools for machine learning and hosts the largest open-source model hub. It was founded in 2016 by Cl\u00e9ment Delangue, Julien Chaumond, and Thomas Wolf. Hugging Face is headquartered in New York City with offices in Paris. The Transformers library by Hugging Face is the most widely used NLP library with over 100,000 pre-trained models. Hugging Face raised $235 million in a Series D round in 2023 at a valuation of $4.5 billion. The company hosts the Hugging Face Hub with over 500,000 models, datasets, and demos.",
+    "source_document": "ai_technology.txt",
+    "chunk_index": 5,
+    "metadata": {
+      "file": "data/raw/ai_technology.txt",
+      "size": 816
+    }
+  }
+]

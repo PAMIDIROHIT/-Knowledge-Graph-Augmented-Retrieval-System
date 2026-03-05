@@ -33,6 +33,22 @@ def _load_params():
         return {}
 
 
+def _load_env():
+    """Load .env file if present (python-dotenv style, without requiring the package)."""
+    env_path = Path(".env")
+    if not env_path.exists():
+        return
+    for line in env_path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip()
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifespan: initialize and tear down resources."""
@@ -43,6 +59,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         logger.info("graphrag_api_shutdown")
         return
 
+    _load_env()
     params = _load_params()
     graph_cfg = params.get("graph", {})
     ret_cfg = params.get("retrieval", {})
@@ -63,8 +80,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     indexer = GraphIndexer(
         index_path=index_path,
         id_map_path=id_map_path,
-        embedding_model=ret_cfg.get("embedding_model", "text-embedding-3-small"),
-        embedding_dim=int(ret_cfg.get("embedding_dim", 1536)),
+        embedding_model=ret_cfg.get("embedding_model", "all-MiniLM-L6-v2"),
+        embedding_dim=int(ret_cfg.get("embedding_dim", 384)),
     )
 
     if Path(index_path).exists():
@@ -76,6 +93,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     else:
         logger.warning("faiss_index_not_found", path=index_path)
 
+    grok_api_key = os.environ.get("GROK_API_KEY")
+
     # Build retriever
     retriever = HybridRetriever(
         indexer=indexer,
@@ -85,8 +104,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         traversal_depth=int(ret_cfg.get("graph_traversal_depth", 2)),
         vector_weight=float(ret_cfg.get("hybrid_vector_weight", 0.4)),
         graph_weight=float(ret_cfg.get("hybrid_graph_weight", 0.6)),
-        qa_model=qa_cfg.get("model", "claude-sonnet-4-6"),
-        qa_max_tokens=int(qa_cfg.get("max_tokens", 64000)),
+        qa_model=qa_cfg.get("model", "grok-3"),
+        qa_max_tokens=int(qa_cfg.get("max_tokens", 16384)),
+        api_key=grok_api_key,
     )
 
     app.state.neo4j = neo4j
@@ -124,6 +144,11 @@ app.include_router(router)
 static_dir = Path("src/api/static")
 if static_dir.exists():
     app.mount("/explorer", StaticFiles(directory=str(static_dir), html=True), name="static")
+
+# Serve the main frontend app at /app
+frontend_dir = Path("frontend")
+if frontend_dir.exists():
+    app.mount("/app", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
 
 # Prometheus metrics instrumentation
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")

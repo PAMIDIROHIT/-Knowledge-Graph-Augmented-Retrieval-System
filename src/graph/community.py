@@ -1,15 +1,16 @@
 """
-Leiden community detection + LLM-based community summary generation.
+Leiden community detection + LLM-based community summary generation using Grok.
 Stores communities back in Neo4j as Community nodes.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import time
 from typing import Any, Optional
 
-import anthropic
+import openai
 import networkx as nx
 import structlog
 
@@ -44,10 +45,10 @@ def run_leiden(
 
     # graspologic leiden expects undirected graph
     undirected = graph.to_undirected() if nx.is_directed(graph) else graph
-    partition, _ = leiden(
+    partition = leiden(
         undirected,
         resolution=resolution,
-        n_iterations=n_iterations,
+        extra_forced_iterations=n_iterations,
         random_seed=random_seed,
     )
 
@@ -90,13 +91,16 @@ class CommunityDetector:
 
     def __init__(
         self,
-        summary_model: str = "claude-sonnet-4-6",
+        summary_model: str = "grok-3",
         max_communities_to_summarize: int = 500,
         api_key: Optional[str] = None,
     ) -> None:
         self.summary_model = summary_model
         self.max_communities_to_summarize = max_communities_to_summarize
-        self._client = anthropic.Anthropic(api_key=api_key)
+        self._client = openai.OpenAI(
+            api_key=api_key or os.environ.get("GROK_API_KEY"),
+            base_url="https://api.x.ai/v1",
+        )
 
     def detect_and_summarize(
         self,
@@ -182,16 +186,16 @@ class CommunityDetector:
         )
 
         try:
-            response = self._client.messages.create(
+            response = self._client.chat.completions.create(
                 model=self.summary_model,
                 max_tokens=8192,
-                thinking={"type": "disabled"},
-                system=COMMUNITY_SUMMARY_SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": prompt}],
+                timeout=15,
+                messages=[
+                    {"role": "system", "content": COMMUNITY_SUMMARY_SYSTEM_PROMPT},
+                    {"role": "user", "content": prompt},
+                ],
             )
-            raw = "\n".join(
-                block.text for block in response.content if hasattr(block, "text")
-            ).strip()
+            raw = (response.choices[0].message.content or "").strip()
 
             import re
             raw = re.sub(r"```(?:json)?", "", raw).strip()

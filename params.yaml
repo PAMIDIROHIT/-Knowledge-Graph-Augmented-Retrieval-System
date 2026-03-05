@@ -1,5 +1,5 @@
 extraction:
-  model: "claude-sonnet-4-6"
+  model: "grok-3"
   max_tokens: 16384
   effort_level: "medium"
   chunk_size: 1024
@@ -29,14 +29,14 @@ community:
   resolution: 1.0
   n_iterations: 10
   random_seed: 42
-  summary_model: "claude-sonnet-4-6"
+  summary_model: "grok-3"
   summary_effort: "low"
   min_community_size: 3
   max_communities_to_summarize: 500
 
 retrieval:
-  embedding_model: "text-embedding-3-small"
-  embedding_dim: 1536
+  embedding_model: "all-MiniLM-L6-v2"
+  embedding_dim: 384
   top_k_vector: 10
   top_k_graph: 5
   graph_traversal_depth: 2
@@ -56,8 +56,8 @@ mlflow:
   experiment_name: "graphrag_experiments"
 
 qa_model:
-  model: "claude-sonnet-4-6"
-  max_tokens: 64000
+  model: "grok-3"
+  max_tokens: 16384
   effort_level: "high"
 
 evaluation:
