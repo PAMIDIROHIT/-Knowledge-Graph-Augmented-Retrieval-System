@@ -1,8 +1,8 @@
 {
-  "graph_nodes": 54,
-  "graph_edges": 37,
-  "communities": 9,
-  "neo4j_available": false,
-  "neo4j_write_duration_s": 0.0,
-  "total_duration_s": 19.14
+  "graph_nodes": 159,
+  "graph_edges": 123,
+  "communities": 16,
+  "neo4j_available": true,
+  "neo4j_write_duration_s": 49.75,
+  "total_duration_s": 99.52
 }

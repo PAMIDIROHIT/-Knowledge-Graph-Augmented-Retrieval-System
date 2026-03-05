@@ -1,6 +1,6 @@
 {
-  "entities_indexed": 54,
-  "communities_indexed": 9,
-  "total_vectors": 63,
-  "indexing_duration_s": 13.61
+  "entities_indexed": 159,
+  "communities_indexed": 16,
+  "total_vectors": 175,
+  "indexing_duration_s": 11.99
 }

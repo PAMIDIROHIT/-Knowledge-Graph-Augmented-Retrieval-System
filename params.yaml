@@ -1,6 +1,6 @@
 extraction:
-  model: "grok-3"
-  max_tokens: 16384
+  model: "llama-3.3-70b-versatile"
+  max_tokens: 8192
   effort_level: "medium"
   chunk_size: 1024
   chunk_overlap: 128
@@ -18,10 +18,10 @@ extraction:
     - TECHNOLOGY
 
 graph:
-  neo4j_uri: "bolt://localhost:7687"
-  neo4j_user: "neo4j"
-  neo4j_password: "graphrag_password"
-  neo4j_database: "neo4j"
+  neo4j_uri: "neo4j+s://1a1a3086.databases.neo4j.io"
+  neo4j_user: "1a1a3086"
+  neo4j_password: "6pnU-sWMnjO94TygI_b41P7mJL40badWMwuJ0fHjZ6c"
+  neo4j_database: "1a1a3086"
   max_connection_pool_size: 50
   connection_acquisition_timeout: 60
 
@@ -29,7 +29,7 @@ community:
   resolution: 1.0
   n_iterations: 10
   random_seed: 42
-  summary_model: "grok-3"
+  summary_model: "llama-3.3-70b-versatile"
   summary_effort: "low"
   min_community_size: 3
   max_communities_to_summarize: 500
@@ -56,8 +56,8 @@ mlflow:
   experiment_name: "graphrag_experiments"
 
 qa_model:
-  model: "grok-3"
-  max_tokens: 16384
+  model: "llama-3.3-70b-versatile"
+  max_tokens: 8192
   effort_level: "high"
 
 evaluation:

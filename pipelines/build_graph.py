@@ -56,9 +56,9 @@ def main(entities_file: str, relations_file: str) -> None:
     # Connect to Neo4j (optional — pipeline continues without it)
     client = Neo4jClient(
         uri=os.environ.get("NEO4J_URI", graph_cfg.get("neo4j_uri", "bolt://localhost:7687")),
-        user=os.environ.get("NEO4J_USER", graph_cfg.get("neo4j_user", "neo4j")),
+        user=os.environ.get("NEO4J_USERNAME", os.environ.get("NEO4J_USER", graph_cfg.get("neo4j_user", "neo4j"))),
         password=os.environ.get("NEO4J_PASSWORD", graph_cfg.get("neo4j_password", "graphrag_password")),
-        database=graph_cfg.get("neo4j_database", "neo4j"),
+        database=os.environ.get("NEO4J_DATABASE", graph_cfg.get("neo4j_database", "neo4j")),
         max_connection_pool_size=graph_cfg.get("max_connection_pool_size", 50),
     )
 
@@ -92,7 +92,7 @@ def main(entities_file: str, relations_file: str) -> None:
     # Run Leiden community detection
     entities_by_id = {e["id"]: e for e in entities}
     detector = CommunityDetector(
-        summary_model=community_cfg.get("summary_model", "grok-3"),
+        summary_model=community_cfg.get("summary_model", "llama-3.3-70b-versatile"),
         max_communities_to_summarize=community_cfg.get("max_communities_to_summarize", 500),
     )
     communities = detector.detect_and_summarize(

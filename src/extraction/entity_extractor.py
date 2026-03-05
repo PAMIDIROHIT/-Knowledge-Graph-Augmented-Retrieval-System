@@ -149,7 +149,7 @@ class EntityExtractor:
 
     def __init__(
         self,
-        model: str = "grok-3",
+        model: str = "llama-3.3-70b-versatile",
         max_tokens: int = 16384,
         effort_level: str = "medium",
         confidence_threshold: float = 0.70,
@@ -163,8 +163,8 @@ class EntityExtractor:
         self.max_concurrency = max_concurrency
         self._semaphore = asyncio.Semaphore(max_concurrency)
         self._client = openai.AsyncOpenAI(
-            api_key=api_key or os.environ.get("GROK_API_KEY"),
-            base_url="https://api.x.ai/v1",
+            api_key=api_key or os.environ.get("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1",
         )
 
     async def extract_chunk(self, chunk: DocumentChunk) -> ExtractionResult:

@@ -93,7 +93,7 @@ class HybridRetriever:
         traversal_depth: int = 2,
         vector_weight: float = 0.4,
         graph_weight: float = 0.6,
-        qa_model: str = "grok-3",
+        qa_model: str = "llama-3.3-70b-versatile",
         qa_max_tokens: int = 16384,
         api_key: Optional[str] = None,
     ) -> None:
@@ -112,8 +112,8 @@ class HybridRetriever:
         self.qa_max_tokens = qa_max_tokens
         import os
         self._client = openai.OpenAI(
-            api_key=api_key or os.environ.get("GROK_API_KEY"),
-            base_url="https://api.x.ai/v1",
+            api_key=api_key or os.environ.get("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1",
         )
 
     def retrieve(self, question: str, mode: str = "auto") -> dict[str, Any]:
@@ -166,6 +166,7 @@ class HybridRetriever:
             response = self._client.chat.completions.create(
                 model=self.qa_model,
                 max_tokens=self.qa_max_tokens,
+                response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": QA_SYSTEM_PROMPT},
                     {"role": "user", "content": qa_prompt},

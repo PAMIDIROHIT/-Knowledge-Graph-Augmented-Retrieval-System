@@ -57,7 +57,7 @@ def main(input_file: str, output_dir: str) -> None:
     logger.info("chunks_loaded", count=len(chunks))
 
     extractor = EntityExtractor(
-        model=ext_cfg.get("model", "grok-3"),
+        model=ext_cfg.get("model", "llama-3.3-70b-versatile"),
         max_tokens=int(ext_cfg.get("max_tokens", 16384)),
         effort_level=ext_cfg.get("effort_level", "medium"),
         confidence_threshold=float(ext_cfg.get("confidence_threshold", 0.70)),

@@ -124,7 +124,7 @@ class TestNeo4jClientMocked:
         assert call_args[0][1] == {"id": "ent_test_001"}, "Parameters must be passed as dict"
 
     def test_get_entity_neighborhood_uses_parameterized_query(self):
-        """Entity neighborhood traversal must use $entity_id and $depth parameters."""
+        """Entity neighborhood traversal must use $entity_id parameter; depth is inlined as literal (Neo4j Aura 5.x requirement)."""
         client, mock_driver = self._make_client()
         mock_session = MagicMock()
         mock_result = MagicMock()
@@ -135,13 +135,15 @@ class TestNeo4jClientMocked:
 
         client.get_entity_neighborhood("ent_test_001", depth=2)
 
-        # Use call_args_list[0] to check the FIRST (main neighbourhood) query,
-        # not the fallback single-entity lookup that runs when the result is empty.
         first_call_args = mock_session.run.call_args_list[0]
         params = first_call_args[0][1]
-        # Must use parameter dict with entity_id and depth — NEVER format them into the string
+        # entity_id must always be parameterized (injection prevention)
         assert "entity_id" in params, "entity_id must be a parameter, not interpolated"
-        assert "depth" in params, "depth must be a parameter, not interpolated"
+        # depth is intentionally inlined as a literal integer (Neo4j Aura 5.x forbids
+        # parameters in variable-length path bounds: *1..$depth is not supported)
+        assert "depth" not in params, "depth must be inlined as literal (Aura 5.x requirement)"
         # Verify the query string does NOT contain the literal entity ID (injection check)
         query_str = first_call_args[0][0]
         assert "ent_test_001" not in query_str, "Entity ID must NOT be interpolated into Cypher query"
+        # Verify depth literal IS present in the query string (e.g. *1..2)
+        assert "*1..2" in query_str, "Depth must be inlined as literal integer in path pattern"

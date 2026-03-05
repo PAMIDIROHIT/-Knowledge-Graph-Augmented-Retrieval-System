@@ -91,15 +91,15 @@ class CommunityDetector:
 
     def __init__(
         self,
-        summary_model: str = "grok-3",
+        summary_model: str = "llama-3.3-70b-versatile",
         max_communities_to_summarize: int = 500,
         api_key: Optional[str] = None,
     ) -> None:
         self.summary_model = summary_model
         self.max_communities_to_summarize = max_communities_to_summarize
         self._client = openai.OpenAI(
-            api_key=api_key or os.environ.get("GROK_API_KEY"),
-            base_url="https://api.x.ai/v1",
+            api_key=api_key or os.environ.get("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1",
         )
 
     def detect_and_summarize(
@@ -190,6 +190,7 @@ class CommunityDetector:
                 model=self.summary_model,
                 max_tokens=8192,
                 timeout=15,
+                response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": COMMUNITY_SUMMARY_SYSTEM_PROMPT},
                     {"role": "user", "content": prompt},

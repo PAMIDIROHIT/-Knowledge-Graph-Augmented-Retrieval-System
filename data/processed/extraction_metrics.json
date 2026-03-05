@@ -1,7 +1,7 @@
 {
-  "entities_extracted": 0,
-  "relations_extracted": 0,
+  "entities_extracted": 159,
+  "relations_extracted": 123,
   "chunks_processed": 11,
-  "extraction_duration_s": 1.19,
-  "extraction_latency_p95_ms": 0.0
+  "extraction_duration_s": 35.28,
+  "extraction_latency_p95_ms": 18413.7
 }

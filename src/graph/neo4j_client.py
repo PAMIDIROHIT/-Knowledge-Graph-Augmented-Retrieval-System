@@ -190,27 +190,30 @@ class Neo4jClient:
         """
         Traverse the neighborhood of an entity up to `depth` hops.
         Returns {nodes: [...], edges: [...]}.
-        Uses parameterized query — NO string interpolation.
+        Depth is inlined as a literal (Neo4j Aura 5.x requires literals for variable-length paths).
         """
-        query = """
-        MATCH path = (start:Entity {id: $entity_id})-[r:RELATION*1..$depth]-(neighbor:Entity)
+        # Neo4j Aura 5.x doesn't allow parameters in variable-length path bounds.
+        # Depth is an integer from internal code — safe to inline.
+        depth = max(1, min(int(depth), 5))  # clamp to 1–5
+        query = f"""
+        MATCH path = (start:Entity {{id: $entity_id}})-[r:RELATION*1..{depth}]-(neighbor:Entity)
         WITH nodes(path) AS ns, relationships(path) AS rs
         UNWIND ns AS n
-        WITH COLLECT(DISTINCT {id: n.id, name: n.name, type: n.type, description: n.description}) AS nodes_list,
+        WITH COLLECT(DISTINCT {{id: n.id, name: n.name, type: n.type, description: n.description}}) AS nodes_list,
              rs
         UNWIND rs AS rel
         WITH nodes_list,
-             COLLECT(DISTINCT {
+             COLLECT(DISTINCT {{
                id: rel.id,
                source: startNode(rel).id,
                target: endNode(rel).id,
                relation_type: rel.relation_type,
                description: rel.description,
                confidence: rel.confidence
-             }) AS edges_list
+             }}) AS edges_list
         RETURN nodes_list AS nodes, edges_list AS edges
         """
-        results = self.run_cypher(query, {"entity_id": entity_id, "depth": depth})
+        results = self.run_cypher(query, {"entity_id": entity_id})
         if not results:
             # Return just the starting entity
             entity = self.run_cypher(

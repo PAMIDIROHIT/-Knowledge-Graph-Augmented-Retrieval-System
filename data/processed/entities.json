@@ -1,56 +1,1631 @@
 [
-  {"id": "ent_ai_companies_0001_001", "name": "OpenAI", "type": "ORGANIZATION", "description": "AI safety company founded in 2015, creators of GPT-4 and ChatGPT, headquartered in San Francisco", "source_chunk_id": "ai_companies_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0001_002", "name": "Sam Altman", "type": "PERSON", "description": "CEO of OpenAI, co-founder who leads the company and its mission toward AGI", "source_chunk_id": "ai_companies_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0001_003", "name": "Greg Brockman", "type": "PERSON", "description": "President and co-founder of OpenAI", "source_chunk_id": "ai_companies_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0001_004", "name": "Ilya Sutskever", "type": "PERSON", "description": "Co-founder and former Chief Scientist of OpenAI, left in 2024 to start Safe Superintelligence Inc.", "source_chunk_id": "ai_companies_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0001_005", "name": "Elon Musk", "type": "PERSON", "description": "Co-founded OpenAI in 2015 and later founded xAI; CEO of Tesla and SpaceX", "source_chunk_id": "ai_companies_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0001_006", "name": "San Francisco", "type": "LOCATION", "description": "City in California where OpenAI, Anthropic, and xAI are headquartered", "source_chunk_id": "ai_companies_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0001_007", "name": "GPT-4", "type": "PRODUCT", "description": "Large multimodal model by OpenAI released March 2023, accepts image and text inputs, showing human-level performance on benchmarks", "source_chunk_id": "ai_companies_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0001_008", "name": "ChatGPT", "type": "PRODUCT", "description": "Conversational AI by OpenAI released November 2022; fastest-growing consumer app reaching 100M users in two months", "source_chunk_id": "ai_companies_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0002_001", "name": "Microsoft", "type": "ORGANIZATION", "description": "Global technology company that invested $10 billion in OpenAI and integrated AI into Azure, Bing, and Microsoft 365", "source_chunk_id": "ai_companies_0002", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0002_002", "name": "Satya Nadella", "type": "PERSON", "description": "CEO of Microsoft who described the OpenAI partnership as transformative for productivity software", "source_chunk_id": "ai_companies_0002", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0002_003", "name": "Azure OpenAI Service", "type": "PRODUCT", "description": "Microsoft's cloud service integrating OpenAI models into Azure for enterprise customers", "source_chunk_id": "ai_companies_0002", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0002_004", "name": "Microsoft 365 Copilot", "type": "PRODUCT", "description": "AI-powered productivity assistant integrated into Microsoft 365 using OpenAI technology", "source_chunk_id": "ai_companies_0002", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0003_001", "name": "Anthropic", "type": "ORGANIZATION", "description": "AI safety company founded in 2021, creators of Claude, backed by Google and Amazon with $7.3B raised", "source_chunk_id": "ai_companies_0003", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0003_002", "name": "Dario Amodei", "type": "PERSON", "description": "CEO and co-founder of Anthropic, previously worked at OpenAI", "source_chunk_id": "ai_companies_0003", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0003_003", "name": "Daniela Amodei", "type": "PERSON", "description": "President and co-founder of Anthropic", "source_chunk_id": "ai_companies_0003", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0003_004", "name": "Claude 3", "type": "PRODUCT", "description": "Anthropic's AI assistant family released March 2024 including Haiku (fastest), Sonnet (balanced), and Opus (most capable)", "source_chunk_id": "ai_companies_0003", "confidence": 0.99, "aliases": ["Claude 3 Opus", "Claude 3 Sonnet", "Claude 3 Haiku"], "attributes": {}},
-  {"id": "ent_ai_companies_0003_005", "name": "Constitutional AI", "type": "TECHNOLOGY", "description": "Anthropic's training methodology to make Claude helpful, harmless, and honest", "source_chunk_id": "ai_companies_0003", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0004_001", "name": "Amazon Web Services", "type": "ORGANIZATION", "description": "Cloud computing division of Amazon that invested $4 billion in Anthropic in 2023", "source_chunk_id": "ai_companies_0004", "confidence": 0.99, "aliases": ["AWS"], "attributes": {}},
-  {"id": "ent_ai_companies_0004_002", "name": "Amazon Bedrock", "type": "PRODUCT", "description": "AWS managed AI service offering Anthropic's Claude models alongside other foundation models", "source_chunk_id": "ai_companies_0004", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0005_001", "name": "Google DeepMind", "type": "ORGANIZATION", "description": "AI research lab formed April 2023 from merger of Google Brain and DeepMind, headquartered in London", "source_chunk_id": "ai_companies_0005", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0005_002", "name": "Demis Hassabis", "type": "PERSON", "description": "CEO and co-founder of Google DeepMind", "source_chunk_id": "ai_companies_0005", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0005_003", "name": "Jeff Dean", "type": "PERSON", "description": "Former head of Google Brain, Chief Scientist at Google", "source_chunk_id": "ai_companies_0005", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0005_004", "name": "AlphaFold", "type": "PRODUCT", "description": "Google DeepMind system that solves protein structure prediction with atomic accuracy", "source_chunk_id": "ai_companies_0005", "confidence": 0.99, "aliases": ["AlphaFold 2"], "attributes": {}},
-  {"id": "ent_ai_companies_0005_005", "name": "Gemini", "type": "PRODUCT", "description": "Google DeepMind's multimodal AI model family released December 2023; Ultra variant outperformed GPT-4 on MMLU", "source_chunk_id": "ai_companies_0005", "confidence": 0.99, "aliases": ["Gemini Ultra"], "attributes": {}},
-  {"id": "ent_ai_companies_0005_006", "name": "London", "type": "LOCATION", "description": "City in England where Google DeepMind is headquartered", "source_chunk_id": "ai_companies_0005", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0006_001", "name": "Meta AI Research", "type": "ORGANIZATION", "description": "AI research division of Meta Platforms (formerly Facebook)", "source_chunk_id": "ai_companies_0006", "confidence": 0.99, "aliases": ["Meta AI"], "attributes": {}},
-  {"id": "ent_ai_companies_0006_002", "name": "Yann LeCun", "type": "PERSON", "description": "Chief AI Scientist at Meta, pioneer of convolutional neural networks", "source_chunk_id": "ai_companies_0006", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0006_003", "name": "LLaMA", "type": "PRODUCT", "description": "Meta's open-source large language model family; LLaMA 2 (July 2023), Llama 3 (April 2024) rivaling GPT-4", "source_chunk_id": "ai_companies_0006", "confidence": 0.99, "aliases": ["LLaMA 2", "Llama 3"], "attributes": {}},
-  {"id": "ent_ai_companies_0007_001", "name": "xAI", "type": "ORGANIZATION", "description": "AI company founded by Elon Musk in March 2023, creators of Grok, raised $6B in May 2024 at $24B valuation", "source_chunk_id": "ai_companies_0007", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0007_002", "name": "Grok", "type": "PRODUCT", "description": "xAI's conversational AI; Grok-1 is a 314B parameter mixture-of-experts model trained on X/Twitter data", "source_chunk_id": "ai_companies_0007", "confidence": 0.99, "aliases": ["Grok-1"], "attributes": {}},
-  {"id": "ent_ai_companies_0008_001", "name": "Mistral AI", "type": "ORGANIZATION", "description": "French AI company founded April 2023, creators of Mixtral, raised $415M Series A, backed by a16z and Lightspeed", "source_chunk_id": "ai_companies_0008", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0008_002", "name": "Arthur Mensch", "type": "PERSON", "description": "Co-founder and CEO of Mistral AI, formerly at DeepMind", "source_chunk_id": "ai_companies_0008", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0008_003", "name": "Mixtral 8x7B", "type": "PRODUCT", "description": "Mistral AI's sparse mixture-of-experts model (December 2023) outperforming LLaMA 2 70B on benchmarks", "source_chunk_id": "ai_companies_0008", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_companies_0008_004", "name": "Paris", "type": "LOCATION", "description": "French capital city where Mistral AI is headquartered", "source_chunk_id": "ai_companies_0008", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0001_001", "name": "Transformer", "type": "TECHNOLOGY", "description": "Architecture from 2017 'Attention Is All You Need' paper by Google Brain; replaced RNNs with self-attention for faster parallel training", "source_chunk_id": "ai_tech_0001", "confidence": 0.99, "aliases": ["Transformer architecture"], "attributes": {}},
-  {"id": "ent_ai_tech_0001_002", "name": "Google Brain", "type": "ORGANIZATION", "description": "Google's AI research team that developed the Transformer architecture, later merged with DeepMind", "source_chunk_id": "ai_tech_0001", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0002_001", "name": "BERT", "type": "TECHNOLOGY", "description": "Bidirectional Encoder Representations from Transformers by Google; pre-trained with masked language modeling, used in Google Search since 2019", "source_chunk_id": "ai_tech_0002", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0002_002", "name": "Jacob Devlin", "type": "PERSON", "description": "Lead researcher on BERT at Google AI Language", "source_chunk_id": "ai_tech_0002", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0003_001", "name": "GPT-3", "type": "TECHNOLOGY", "description": "OpenAI's GPT-3 (175B parameters, 2020) demonstrated remarkable few-shot learning; GPT-2 was 1.5B params (2019)", "source_chunk_id": "ai_tech_0003", "confidence": 0.99, "aliases": ["GPT-2"], "attributes": {}},
-  {"id": "ent_ai_tech_0003_002", "name": "Alec Radford", "type": "PERSON", "description": "Lead researcher on GPT papers at OpenAI", "source_chunk_id": "ai_tech_0003", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0004_001", "name": "RAG", "type": "TECHNOLOGY", "description": "Retrieval-Augmented Generation from Facebook AI Research (2020) combining parametric LM memory with non-parametric document retrieval", "source_chunk_id": "ai_tech_0004", "confidence": 0.99, "aliases": ["Retrieval-Augmented Generation"], "attributes": {}},
-  {"id": "ent_ai_tech_0004_002", "name": "Facebook AI Research", "type": "ORGANIZATION", "description": "Meta's AI research lab that developed RAG, FAISS, and LLaMA", "source_chunk_id": "ai_tech_0004", "confidence": 0.99, "aliases": ["FAIR"], "attributes": {}},
-  {"id": "ent_ai_tech_0005_001", "name": "GraphRAG", "type": "TECHNOLOGY", "description": "Microsoft Research system that builds a knowledge graph from documents (entity extraction + community detection) then retrieves via graph traversal and vector search", "source_chunk_id": "ai_tech_0005", "confidence": 0.99, "aliases": ["Knowledge Graph Augmented RAG"], "attributes": {}},
-  {"id": "ent_ai_tech_0005_002", "name": "Microsoft Research", "type": "ORGANIZATION", "description": "Research division of Microsoft that developed the GraphRAG system", "source_chunk_id": "ai_tech_0005", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0005_003", "name": "Darren Edge", "type": "PERSON", "description": "Principal author of the GraphRAG paper at Microsoft Research", "source_chunk_id": "ai_tech_0005", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0006_001", "name": "FAISS", "type": "TECHNOLOGY", "description": "Facebook AI Similarity Search library (2017) for efficient billion-scale dense vector search supporting HNSW, IVF, Flat indexes", "source_chunk_id": "ai_tech_0006", "confidence": 0.99, "aliases": ["Facebook AI Similarity Search"], "attributes": {}},
-  {"id": "ent_ai_tech_0007_001", "name": "Leiden Algorithm", "type": "TECHNOLOGY", "description": "Community detection algorithm (2019, Traag et al.) guaranteeing well-connected communities; improves over Louvain; used in GraphRAG", "source_chunk_id": "ai_tech_0007", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0008_001", "name": "LangChain", "type": "PRODUCT", "description": "Open-source LLM framework by Harrison Chase (Oct 2022) for building chains, RAG pipelines, and agents; 80K+ GitHub stars", "source_chunk_id": "ai_tech_0008", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0008_002", "name": "Harrison Chase", "type": "PERSON", "description": "Creator of LangChain; raised $25M seed round from Benchmark in April 2023", "source_chunk_id": "ai_tech_0008", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0009_001", "name": "LlamaIndex", "type": "PRODUCT", "description": "Data framework by Jerry Liu (Nov 2022) for connecting custom data sources to LLMs with hundreds of data connectors", "source_chunk_id": "ai_tech_0009", "confidence": 0.99, "aliases": ["GPT Index"], "attributes": {}},
-  {"id": "ent_ai_tech_0009_002", "name": "Jerry Liu", "type": "PERSON", "description": "Creator of LlamaIndex; raised $8.5M seed round in 2023", "source_chunk_id": "ai_tech_0009", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0010_001", "name": "Hugging Face", "type": "ORGANIZATION", "description": "ML tools company (founded 2016) hosting 500K+ open-source models; raised $235M Series D at $4.5B valuation", "source_chunk_id": "ai_tech_0010", "confidence": 0.99, "aliases": [], "attributes": {}},
-  {"id": "ent_ai_tech_0010_002", "name": "Transformers Library", "type": "PRODUCT", "description": "Hugging Face's Python library with 100K+ pre-trained NLP models; the most widely-used NLP library", "source_chunk_id": "ai_tech_0010", "confidence": 0.99, "aliases": ["HF Transformers"], "attributes": {}},
-  {"id": "ent_ai_tech_0010_003", "name": "Clement Delangue", "type": "PERSON", "description": "Co-founder and CEO of Hugging Face", "source_chunk_id": "ai_tech_0010", "confidence": 0.99, "aliases": [], "attributes": {}}
+  {
+    "id": "ent_chunk_61ccae30_001",
+    "name": "OpenAI",
+    "type": "ORGANIZATION",
+    "description": "Artificial intelligence organization",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_002",
+    "name": "Elon Musk",
+    "type": "PERSON",
+    "description": "Co-founder of OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_003",
+    "name": "Sam Altman",
+    "type": "PERSON",
+    "description": "Co-founder and CEO of OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_004",
+    "name": "Greg Brockman",
+    "type": "PERSON",
+    "description": "Co-founder and President of OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_005",
+    "name": "Ilya Sutskever",
+    "type": "PERSON",
+    "description": "Co-founder of OpenAI and founder of Safe Superintelligence Inc.",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_006",
+    "name": "Wojciech Zaremba",
+    "type": "PERSON",
+    "description": "Co-founder of OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_007",
+    "name": "John Schulman",
+    "type": "PERSON",
+    "description": "Co-founder of OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_008",
+    "name": "San Francisco",
+    "type": "LOCATION",
+    "description": "Headquarters location of OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_009",
+    "name": "GPT-4",
+    "type": "PRODUCT",
+    "description": "Large multimodal model released by OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_010",
+    "name": "ChatGPT",
+    "type": "PRODUCT",
+    "description": "Consumer application released by OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_011",
+    "name": "GPT-3.5",
+    "type": "PRODUCT",
+    "description": "Model powering ChatGPT",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_012",
+    "name": "Microsoft",
+    "type": "ORGANIZATION",
+    "description": "Investor in OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_013",
+    "name": "2015",
+    "type": "DATE",
+    "description": "Founding year of OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_014",
+    "name": "2022",
+    "type": "DATE",
+    "description": "Release year of ChatGPT",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_015",
+    "name": "2023",
+    "type": "DATE",
+    "description": "Release year of GPT-4 and investment year from Microsoft",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_016",
+    "name": "2024",
+    "type": "DATE",
+    "description": "Year Ilya Sutskever departed OpenAI",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_017",
+    "name": "Safe Superintelligence Inc.",
+    "type": "ORGANIZATION",
+    "description": "Company founded by Ilya Sutskever",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_61ccae30_018",
+    "name": "California",
+    "type": "LOCATION",
+    "description": "State where OpenAI is headquartered",
+    "source_chunk_id": "chunk_61ccae30",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_001",
+    "name": "ChatGPT",
+    "type": "PRODUCT",
+    "description": "AI-powered chatbot",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_002",
+    "name": "GPT-3.5",
+    "type": "TECHNOLOGY",
+    "description": "AI model",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_003",
+    "name": "GPT-4",
+    "type": "TECHNOLOGY",
+    "description": "AI model",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_004",
+    "name": "OpenAI",
+    "type": "ORGANIZATION",
+    "description": "AI research company",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_005",
+    "name": "Microsoft",
+    "type": "ORGANIZATION",
+    "description": "Technology company",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_006",
+    "name": "Azure OpenAI Service",
+    "type": "PRODUCT",
+    "description": "Cloud-based AI service",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_007",
+    "name": "Bing Search",
+    "type": "PRODUCT",
+    "description": "Search engine",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_008",
+    "name": "Microsoft 365 Copilot",
+    "type": "PRODUCT",
+    "description": "Productivity software",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_009",
+    "name": "Satya Nadella",
+    "type": "PERSON",
+    "description": "Microsoft CEO",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_010",
+    "name": "Anthropic",
+    "type": "ORGANIZATION",
+    "description": "AI safety company",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_011",
+    "name": "Dario Amodei",
+    "type": "PERSON",
+    "description": "Anthropic CEO",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_012",
+    "name": "Daniela Amodei",
+    "type": "PERSON",
+    "description": "Anthropic President",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_013",
+    "name": "San Francisco",
+    "type": "LOCATION",
+    "description": "City in California",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_014",
+    "name": "Google",
+    "type": "ORGANIZATION",
+    "description": "Technology company",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_015",
+    "name": "Amazon",
+    "type": "ORGANIZATION",
+    "description": "E-commerce company",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_016",
+    "name": "Spark Capital",
+    "type": "ORGANIZATION",
+    "description": "Venture capital firm",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_017",
+    "name": "Claude",
+    "type": "PRODUCT",
+    "description": "AI assistant",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_018",
+    "name": "January 2023",
+    "type": "DATE",
+    "description": "Month and year",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_019",
+    "name": "2021",
+    "type": "DATE",
+    "description": "Year",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_020",
+    "name": "2024",
+    "type": "DATE",
+    "description": "Year",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_021",
+    "name": "2019",
+    "type": "DATE",
+    "description": "Year",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_022",
+    "name": "10 billion",
+    "type": "FINANCIAL_METRIC",
+    "description": "Investment amount",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5f8a1288_023",
+    "name": "7.3 billion",
+    "type": "FINANCIAL_METRIC",
+    "description": "Funding amount",
+    "source_chunk_id": "chunk_5f8a1288",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_001",
+    "name": "Anthropic",
+    "type": "ORGANIZATION",
+    "description": "AI company",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_002",
+    "name": "Claude",
+    "type": "PRODUCT",
+    "description": "AI assistant",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_003",
+    "name": "Amazon Web Services",
+    "type": "ORGANIZATION",
+    "description": "Cloud computing platform",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [
+      "AWS"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_004",
+    "name": "Google DeepMind",
+    "type": "ORGANIZATION",
+    "description": "AI research laboratory",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_005",
+    "name": "Demis Hassabis",
+    "type": "PERSON",
+    "description": "CEO and co-founder of Google DeepMind",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_006",
+    "name": "Jeff Dean",
+    "type": "PERSON",
+    "description": "Chief Scientist at Google",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_007",
+    "name": "GPT-4",
+    "type": "PRODUCT",
+    "description": "AI model",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_008",
+    "name": "AlphaFold",
+    "type": "PRODUCT",
+    "description": "AI system for predicting protein structures",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_009",
+    "name": "London",
+    "type": "LOCATION",
+    "description": "City in England",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_010",
+    "name": "Amazon Bedrock",
+    "type": "PRODUCT",
+    "description": "Managed AI service",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_011",
+    "name": "Google Brain",
+    "type": "ORGANIZATION",
+    "description": "AI research organization",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_012",
+    "name": "Constitutional AI",
+    "type": "TECHNOLOGY",
+    "description": "Training methodology",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_013",
+    "name": "2023",
+    "type": "DATE",
+    "description": "Year",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_5bd28648_014",
+    "name": "2024",
+    "type": "DATE",
+    "description": "Year",
+    "source_chunk_id": "chunk_5bd28648",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_001",
+    "name": "Google DeepMind",
+    "type": "ORGANIZATION",
+    "description": "Artificial intelligence research organization",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [
+      "DeepMind"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_002",
+    "name": "AlphaFold",
+    "type": "PRODUCT",
+    "description": "AI system for predicting protein structures",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [
+      "AlphaFold 2"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_003",
+    "name": "Gemini",
+    "type": "PRODUCT",
+    "description": "Multimodal AI model family",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [
+      "Gemini Ultra"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_004",
+    "name": "GPT-4",
+    "type": "PRODUCT",
+    "description": "AI model for benchmarking",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_005",
+    "name": "Meta AI Research",
+    "type": "ORGANIZATION",
+    "description": "Artificial intelligence research division",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_006",
+    "name": "Meta Platforms",
+    "type": "ORGANIZATION",
+    "description": "Parent company of Meta AI Research",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [
+      "Facebook"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_007",
+    "name": "Yann LeCun",
+    "type": "PERSON",
+    "description": "Chief AI Scientist at Meta",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_008",
+    "name": "LLaMA",
+    "type": "PRODUCT",
+    "description": "Large Language Model Meta AI",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [
+      "LLaMA 2",
+      "Llama 3"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_009",
+    "name": "Microsoft",
+    "type": "ORGANIZATION",
+    "description": "Partner of Meta AI Research",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_010",
+    "name": "xAI",
+    "type": "ORGANIZATION",
+    "description": "Artificial intelligence company",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_011",
+    "name": "Elon Musk",
+    "type": "PERSON",
+    "description": "Founder and CEO of xAI",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_012",
+    "name": "San Francisco",
+    "type": "LOCATION",
+    "description": "Headquarters of xAI",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_013",
+    "name": "California",
+    "type": "LOCATION",
+    "description": "State where xAI is headquartered",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_014",
+    "name": "Segment Anything Model (SAM)",
+    "type": "PRODUCT",
+    "description": "Image segmentation model",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_015",
+    "name": "December 2023",
+    "type": "DATE",
+    "description": "Release date of Gemini",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_016",
+    "name": "February 2023",
+    "type": "DATE",
+    "description": "Release date of LLaMA",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_017",
+    "name": "July 2023",
+    "type": "DATE",
+    "description": "Release date of LLaMA 2",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_018",
+    "name": "April 2024",
+    "type": "DATE",
+    "description": "Release date of Llama 3",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_b9ce4aa7_019",
+    "name": "March 2023",
+    "type": "DATE",
+    "description": "Founding date of xAI",
+    "source_chunk_id": "chunk_b9ce4aa7",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_001",
+    "name": "xAI",
+    "type": "ORGANIZATION",
+    "description": "AI company",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_002",
+    "name": "Elon Musk",
+    "type": "PERSON",
+    "description": "Founder and CEO of xAI",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_003",
+    "name": "San Francisco",
+    "type": "LOCATION",
+    "description": "City in California",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_004",
+    "name": "California",
+    "type": "LOCATION",
+    "description": "State in the US",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_005",
+    "name": "Grok",
+    "type": "PRODUCT",
+    "description": "Conversational AI model",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [
+      "Grok-1"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_006",
+    "name": "Mistral AI",
+    "type": "ORGANIZATION",
+    "description": "French artificial intelligence company",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_007",
+    "name": "Arthur Mensch",
+    "type": "PERSON",
+    "description": "Founder of Mistral AI",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_008",
+    "name": "Guillaume Lample",
+    "type": "PERSON",
+    "description": "Founder of Mistral AI",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_009",
+    "name": "Timoth\u00e9e Lacroix",
+    "type": "PERSON",
+    "description": "Founder of Mistral AI",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_010",
+    "name": "Paris",
+    "type": "LOCATION",
+    "description": "City in France",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_011",
+    "name": "France",
+    "type": "LOCATION",
+    "description": "Country in Europe",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_012",
+    "name": "Mixtral 8x7B",
+    "type": "PRODUCT",
+    "description": "Mixture-of-experts model",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_013",
+    "name": "X (formerly Twitter)",
+    "type": "ORGANIZATION",
+    "description": "Social media platform",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [
+      "Twitter"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_014",
+    "name": "Andreessen Horowitz",
+    "type": "ORGANIZATION",
+    "description": "Venture capital firm",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_015",
+    "name": "Lightspeed Venture Partners",
+    "type": "ORGANIZATION",
+    "description": "Venture capital firm",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_016",
+    "name": "General Catalyst",
+    "type": "ORGANIZATION",
+    "description": "Venture capital firm",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_017",
+    "name": "DeepMind",
+    "type": "ORGANIZATION",
+    "description": "AI research organization",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_018",
+    "name": "Meta",
+    "type": "ORGANIZATION",
+    "description": "Technology company",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_019",
+    "name": "LLaMA 2 70B",
+    "type": "PRODUCT",
+    "description": "AI model",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_020",
+    "name": "November 2023",
+    "type": "DATE",
+    "description": "Month and year",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_021",
+    "name": "May 2024",
+    "type": "DATE",
+    "description": "Month and year",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_022",
+    "name": "April 2023",
+    "type": "DATE",
+    "description": "Month and year",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_023",
+    "name": "June 2023",
+    "type": "DATE",
+    "description": "Month and year",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_024",
+    "name": "December 2023",
+    "type": "DATE",
+    "description": "Month and year",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_025",
+    "name": "$6 billion",
+    "type": "FINANCIAL_METRIC",
+    "description": "Funding amount",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_026",
+    "name": "$24 billion",
+    "type": "FINANCIAL_METRIC",
+    "description": "Valuation",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_08bb2476_027",
+    "name": "$415 million",
+    "type": "FINANCIAL_METRIC",
+    "description": "Funding amount",
+    "source_chunk_id": "chunk_08bb2476",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_001",
+    "name": "Transformer",
+    "type": "TECHNOLOGY",
+    "description": "A neural network architecture",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_002",
+    "name": "Vaswani",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_003",
+    "name": "Shazeer",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_004",
+    "name": "Parmar",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_005",
+    "name": "Uszkoreit",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_006",
+    "name": "Jones",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_007",
+    "name": "Gomez",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_008",
+    "name": "Kaiser",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_009",
+    "name": "Polosukhin",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_010",
+    "name": "Google Brain",
+    "type": "ORGANIZATION",
+    "description": "Research organization",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_011",
+    "name": "BERT",
+    "type": "TECHNOLOGY",
+    "description": "Language model",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [
+      "Bidirectional Encoder Representations from Transformers"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_012",
+    "name": "Google AI Language",
+    "type": "ORGANIZATION",
+    "description": "Research organization",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_013",
+    "name": "Jacob Devlin",
+    "type": "PERSON",
+    "description": "Researcher",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_014",
+    "name": "GPT",
+    "type": "TECHNOLOGY",
+    "description": "Language model",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [
+      "Generative Pre-trained Transformer"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_015",
+    "name": "OpenAI",
+    "type": "ORGANIZATION",
+    "description": "Research organization",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_016",
+    "name": "Google",
+    "type": "ORGANIZATION",
+    "description": "Technology company",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_d03ddc7e_017",
+    "name": "Google Search",
+    "type": "PRODUCT",
+    "description": "Search engine",
+    "source_chunk_id": "chunk_d03ddc7e",
+    "confidence": 1.0,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_001",
+    "name": "RAG",
+    "type": "TECHNOLOGY",
+    "description": "A language model combining parametric and non-parametric memory",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_002",
+    "name": "GraphRAG",
+    "type": "TECHNOLOGY",
+    "description": "An extension of RAG that builds a knowledge graph from source documents",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_003",
+    "name": "Microsoft Research",
+    "type": "ORGANIZATION",
+    "description": "A research organization that developed GraphRAG",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_004",
+    "name": "Darren Edge",
+    "type": "PERSON",
+    "description": "An author of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_005",
+    "name": "Ha Trinh",
+    "type": "PERSON",
+    "description": "An author of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_006",
+    "name": "Newman Cheng",
+    "type": "PERSON",
+    "description": "An author of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_007",
+    "name": "Joshua Bradley",
+    "type": "PERSON",
+    "description": "An author of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_008",
+    "name": "Alex Chao",
+    "type": "PERSON",
+    "description": "An author of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_009",
+    "name": "Apurva Mody",
+    "type": "PERSON",
+    "description": "An author of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_010",
+    "name": "Steven Truitt",
+    "type": "PERSON",
+    "description": "An author of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_011",
+    "name": "Jonathan Larson",
+    "type": "PERSON",
+    "description": "An author of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_012",
+    "name": "DPR",
+    "type": "TECHNOLOGY",
+    "description": "A dense retriever used in RAG",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_013",
+    "name": "seq2seq model",
+    "type": "TECHNOLOGY",
+    "description": "A model used in RAG for generating answers",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_2a7cb21e_014",
+    "name": "Microsoft",
+    "type": "ORGANIZATION",
+    "description": "The organization that employs the authors of the GraphRAG paper",
+    "source_chunk_id": "chunk_2a7cb21e",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_001",
+    "name": "FAISS",
+    "type": "PRODUCT",
+    "description": "A library for efficient similarity search and clustering of dense vectors.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [
+      "Facebook AI Similarity Search"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_002",
+    "name": "Facebook AI Research",
+    "type": "ORGANIZATION",
+    "description": "An AI research organization.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_003",
+    "name": "Jeff Johnson",
+    "type": "PERSON",
+    "description": "A key contributor to FAISS.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_004",
+    "name": "Matthijs Douze",
+    "type": "PERSON",
+    "description": "A key contributor to FAISS.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_005",
+    "name": "Leiden algorithm",
+    "type": "TECHNOLOGY",
+    "description": "An algorithm for community detection.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_006",
+    "name": "Vincent Traag",
+    "type": "PERSON",
+    "description": "A researcher who published the Leiden algorithm.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_007",
+    "name": "Ludo Waltman",
+    "type": "PERSON",
+    "description": "A researcher who published the Leiden algorithm.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_008",
+    "name": "Nees Jan van Eck",
+    "type": "PERSON",
+    "description": "A researcher who published the Leiden algorithm.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_009",
+    "name": "HNSW",
+    "type": "TECHNOLOGY",
+    "description": "A type of index used in FAISS.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [
+      "Hierarchical Navigable Small World"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_010",
+    "name": "IVF",
+    "type": "TECHNOLOGY",
+    "description": "A type of index used in FAISS.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [
+      "Inverted File Index"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_011",
+    "name": "Louvain algorithm",
+    "type": "TECHNOLOGY",
+    "description": "An algorithm for community detection.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_012",
+    "name": "2017",
+    "type": "DATE",
+    "description": "The year FAISS was released.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_06fbdfcb_013",
+    "name": "2019",
+    "type": "DATE",
+    "description": "The year the Leiden algorithm was published.",
+    "source_chunk_id": "chunk_06fbdfcb",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_001",
+    "name": "LlamaIndex",
+    "type": "ORGANIZATION",
+    "description": "Company providing data ingestion and integration tools",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {
+      "founding_year": null,
+      "founders": null
+    }
+  },
+  {
+    "id": "ent_chunk_c6fca48f_002",
+    "name": "LangChain",
+    "type": "PRODUCT",
+    "description": "Framework integrated with LlamaIndex",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.9,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_003",
+    "name": "Hugging Face",
+    "type": "ORGANIZATION",
+    "description": "Company building machine learning tools and hosting model hub",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {
+      "founding_year": "2016",
+      "founders": [
+        "Cl\u00e9ment Delangue",
+        "Julien Chaumond",
+        "Thomas Wolf"
+      ]
+    }
+  },
+  {
+    "id": "ent_chunk_c6fca48f_004",
+    "name": "Cl\u00e9ment Delangue",
+    "type": "PERSON",
+    "description": "Co-founder of Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_005",
+    "name": "Julien Chaumond",
+    "type": "PERSON",
+    "description": "Co-founder of Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_006",
+    "name": "Thomas Wolf",
+    "type": "PERSON",
+    "description": "Co-founder of Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_007",
+    "name": "New York City",
+    "type": "LOCATION",
+    "description": "Headquarters location of Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [
+      "NYC"
+    ],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_008",
+    "name": "Paris",
+    "type": "LOCATION",
+    "description": "Office location of Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_009",
+    "name": "Transformers library",
+    "type": "PRODUCT",
+    "description": "NLP library developed by Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_010",
+    "name": "Hugging Face Hub",
+    "type": "PRODUCT",
+    "description": "Model hub hosted by Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_011",
+    "name": "2023",
+    "type": "DATE",
+    "description": "Year of funding rounds",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_012",
+    "name": "8.5 million",
+    "type": "FINANCIAL_METRIC",
+    "description": "Funding amount raised by LlamaIndex",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_013",
+    "name": "235 million",
+    "type": "FINANCIAL_METRIC",
+    "description": "Funding amount raised by Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  },
+  {
+    "id": "ent_chunk_c6fca48f_014",
+    "name": "4.5 billion",
+    "type": "FINANCIAL_METRIC",
+    "description": "Valuation of Hugging Face",
+    "source_chunk_id": "chunk_c6fca48f",
+    "confidence": 0.95,
+    "aliases": [],
+    "attributes": {}
+  }
 ]

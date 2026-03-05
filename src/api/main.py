@@ -68,9 +68,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Connect to Neo4j
     neo4j = Neo4jClient(
         uri=os.environ.get("NEO4J_URI", graph_cfg.get("neo4j_uri", "bolt://localhost:7687")),
-        user=os.environ.get("NEO4J_USER", graph_cfg.get("neo4j_user", "neo4j")),
+        user=os.environ.get("NEO4J_USERNAME", os.environ.get("NEO4J_USER", graph_cfg.get("neo4j_user", "neo4j"))),
         password=os.environ.get("NEO4J_PASSWORD", graph_cfg.get("neo4j_password", "graphrag_password")),
-        database=graph_cfg.get("neo4j_database", "neo4j"),
+        database=os.environ.get("NEO4J_DATABASE", graph_cfg.get("neo4j_database", "neo4j")),
         max_connection_pool_size=graph_cfg.get("max_connection_pool_size", 50),
     )
 
@@ -93,7 +93,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     else:
         logger.warning("faiss_index_not_found", path=index_path)
 
-    grok_api_key = os.environ.get("GROK_API_KEY")
+    groq_api_key = os.environ.get("GROQ_API_KEY")
 
     # Build retriever
     retriever = HybridRetriever(
@@ -104,9 +104,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         traversal_depth=int(ret_cfg.get("graph_traversal_depth", 2)),
         vector_weight=float(ret_cfg.get("hybrid_vector_weight", 0.4)),
         graph_weight=float(ret_cfg.get("hybrid_graph_weight", 0.6)),
-        qa_model=qa_cfg.get("model", "grok-3"),
-        qa_max_tokens=int(qa_cfg.get("max_tokens", 16384)),
-        api_key=grok_api_key,
+        qa_model=qa_cfg.get("model", "llama-3.3-70b-versatile"),
+        qa_max_tokens=int(qa_cfg.get("max_tokens", 8192)),
+        api_key=groq_api_key,
     )
 
     app.state.neo4j = neo4j
