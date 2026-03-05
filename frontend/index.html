@@ -782,7 +782,12 @@ async function sendQuery() {
 
     if (!r.ok) {
       const err = await r.json().catch(() => ({ detail: r.statusText }));
-      appendMsg('bot', `<span style="color:var(--red)">⚠️ Error ${r.status}: ${escapeHtml(err.detail || 'Unknown error')}</span>`);
+      const isPipelineNotReady = r.status === 503 || (err.detail || '').includes('not ready') || (err.detail || '').includes('dvc repro');
+      if (isPipelineNotReady) {
+        appendMsg('bot', `<span style="color:var(--yellow)">⚙️ <b>Pipeline not initialized yet.</b><br>The knowledge graph index hasn't been built. Run <code>dvc repro</code> in the project root to process documents and build the FAISS index, then try again.</span>`);
+      } else {
+        appendMsg('bot', `<span style="color:var(--red)">⚠️ Error ${r.status}: ${escapeHtml(err.detail || 'Unknown error')}</span>`);
+      }
       return;
     }
 

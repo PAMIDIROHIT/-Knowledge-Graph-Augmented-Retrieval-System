@@ -64,15 +64,24 @@ async def query_endpoint(
 
     # Non-streaming: run in threadpool to avoid blocking the event loop
     loop = asyncio.get_event_loop()
-    result = await loop.run_in_executor(
-        None,
-        lambda: retriever.answer(
-            body.question,
-            mode=body.search_mode,
-            top_k=body.top_k,
-            graph_depth=body.graph_depth,
-        ),
-    )
+    try:
+        result = await loop.run_in_executor(
+            None,
+            lambda: retriever.answer(
+                body.question,
+                mode=body.search_mode,
+                top_k=body.top_k,
+                graph_depth=body.graph_depth,
+            ),
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"Knowledge graph pipeline not ready: {str(exc)[:300]}. "
+                "Run 'dvc repro' to build the index before querying."
+            ),
+        ) from exc
 
     # Prometheus metrics
     QUERY_LATENCY_HISTOGRAM.labels(strategy=result.retrieval_strategy).observe(

@@ -100,6 +100,11 @@ class GraphIndexer:
         logger.info("faiss_index_saved", path=str(self.index_path))
 
     def load(self) -> None:
+        if not self.index_path.exists():
+            raise FileNotFoundError(
+                f"FAISS index not found at '{self.index_path}'. "
+                "Run 'dvc repro' to build the pipeline first."
+            )
         self._index = faiss.read_index(str(self.index_path))
         self._id_map = json.loads(self.id_map_path.read_text())
         logger.info("faiss_index_loaded", vectors=self._index.ntotal)
@@ -115,6 +120,9 @@ class GraphIndexer:
         Returns list of (entity_id, score) tuples.
         """
         if self._index is None:
+            if not self.index_path.exists():
+                logger.warning("faiss_index_not_built", path=str(self.index_path))
+                return []
             self.load()
 
         query_vec = embed_texts([query_text], model=self.embedding_model, api_key=api_key or self._api_key)
