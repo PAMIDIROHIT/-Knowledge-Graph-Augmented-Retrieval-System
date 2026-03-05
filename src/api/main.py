@@ -12,6 +12,7 @@ from typing import AsyncGenerator
 
 import structlog
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from prometheus_fastapi_instrumentator import Instrumentator
 
@@ -105,6 +106,15 @@ app = FastAPI(
     description="Production Knowledge Graph-Augmented Retrieval system",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+# CORS — allow frontend (open frontend/index.html) to call the API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],          # Restrict to your domain in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include API routes

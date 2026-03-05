@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GraphRAG · Knowledge Intelligence Platform</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+/* ──────────────────────────────────────────────
+   DESIGN SYSTEM  (Dribbble-inspired dark palette)
+   Primary:  #7C3AED  (violet)
+   Accent:   #06B6D4  (cyan)
+   Surface:  #0F0F1A  (deep navy)
+   Glass:    rgba(255,255,255,0.05)
+   ────────────────────────────────────────────── */
+:root {
+  --bg:         #0F0F1A;
+  --bg2:        #151528;
+  --bg3:        #1C1C38;
+  --glass:      rgba(255,255,255,0.05);
+  --border:     rgba(255,255,255,0.08);
+  --primary:    #7C3AED;
+  --primary-li: #A78BFA;
+  --accent:     #06B6D4;
+  --accent-li:  #67E8F9;
+  --green:      #10B981;
+  --red:        #F43F5E;
+  --yellow:     #F59E0B;
+  --text:       #F1F5F9;
+  --text2:      #94A3B8;
+  --text3:      #475569;
+  --radius:     16px;
+  --radius-sm:  8px;
+  --shadow:     0 8px 32px rgba(0,0,0,0.4);
+  --glow:       0 0 30px rgba(124,58,237,0.3);
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:15px; scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Animated background mesh ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:-1;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(124,58,237,0.12) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(6,182,212,0.08) 0%,transparent 60%),
+    var(--bg);
+}
+
+/* ── Layout ── */
+.app   { display:grid; grid-template-columns:260px 1fr; grid-template-rows:60px 1fr; height:100vh; }
+.topbar{ grid-column:1/-1; display:flex; align-items:center; padding:0 24px; gap:16px;
+         background:rgba(15,15,26,0.9); backdrop-filter:blur(20px);
+         border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; }
+.sidebar { background:var(--bg2); border-right:1px solid var(--border); display:flex;
+           flex-direction:column; gap:0; overflow:hidden; }
+.main   { display:flex; flex-direction:column; overflow:hidden; }
+
+/* ── Logo ── */
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+.logo-icon { width:36px; height:36px; background: linear-gradient(135deg,var(--primary),var(--accent));
+             border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.logo-text { font-size:1.05rem; font-weight:700; color:var(--text);
+             background:linear-gradient(90deg,var(--primary-li),var(--accent-li));
+             -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.topbar-spacer { flex:1; }
+.status-badge { display:flex; align-items:center; gap:6px; font-size:.75rem; color:var(--text2);
+                background:var(--glass); border:1px solid var(--border); border-radius:20px; padding:4px 12px; }
+.status-dot { width:6px; height:6px; border-radius:50%; background:var(--green);
+              animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.theme-btn { background:var(--glass); border:1px solid var(--border); color:var(--text2);
+             padding:6px 14px; border-radius:20px; cursor:pointer; font-size:.8rem;
+             transition:all .2s; }
+.theme-btn:hover { background:var(--primary); color:#fff; border-color:var(--primary); }
+
+/* ── Sidebar nav ── */
+.nav-section { padding:12px 16px 4px; font-size:.65rem; font-weight:700; letter-spacing:.08em;
+               text-transform:uppercase; color:var(--text3); }
+.nav-item { display:flex; align-items:center; gap:10px; padding:10px 16px; cursor:pointer;
+            color:var(--text2); font-size:.85rem; transition:all .15s; border-left:3px solid transparent; }
+.nav-item:hover { background:var(--glass); color:var(--text); }
+.nav-item.active { background:rgba(124,58,237,.15); color:var(--primary-li);
+                   border-left-color:var(--primary); }
+.nav-item .icon { font-size:1rem; width:20px; text-align:center; }
+.sidebar-bottom { margin-top:auto; padding:16px; border-top:1px solid var(--border); }
+.stats-mini { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.stat-card-mini { background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-sm);
+                  padding:10px; text-align:center; }
+.stat-card-mini .n { font-size:1.1rem; font-weight:700; color:var(--primary-li); }
+.stat-card-mini .l { font-size:.65rem; color:var(--text3); margin-top:2px; }
+
+/* ── Page views ── */
+.page { display:none; flex-direction:column; height:100%; overflow:hidden; }
+.page.active { display:flex; }
+
+/* ── Chat page ── */
+.chat-header { padding:20px 28px 12px; border-bottom:1px solid var(--border); }
+.chat-header h1 { font-size:1.2rem; font-weight:700; }
+.chat-header p  { font-size:.8rem; color:var(--text2); margin-top:3px; }
+.mode-pills { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.mode-pill  { padding:4px 14px; border-radius:20px; font-size:.75rem; font-weight:600;
+              border:1px solid var(--border); color:var(--text2); cursor:pointer; transition:all .2s; }
+.mode-pill.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+.mode-pill:hover:not(.active) { border-color:var(--primary-li); color:var(--primary-li); }
+.chat-msgs { flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:16px; }
+.chat-msgs::-webkit-scrollbar { width:4px; }
+.chat-msgs::-webkit-scrollbar-thumb { background:var(--bg3); border-radius:2px; }
+.msg { display:flex; gap:12px; animation:fadeUp .3s ease; max-width:820px; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.msg.user { flex-direction:row-reverse; align-self:flex-end; }
+.msg-avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center;
+              justify-content:center; font-size:.85rem; flex-shrink:0; }
+.msg.user .msg-avatar { background:linear-gradient(135deg,var(--primary),var(--accent)); }
+.msg.bot  .msg-avatar { background:var(--bg3); border:1px solid var(--border); }
+.msg-bubble { background:var(--glass); border:1px solid var(--border); border-radius:var(--radius);
+              padding:14px 18px; font-size:.88rem; line-height:1.65; max-width:680px; }
+.msg.user .msg-bubble { background:rgba(124,58,237,.18); border-color:rgba(124,58,237,.4); }
+.msg-bubble .strategy-tag { display:inline-flex; align-items:center; gap:4px;
+                             background:rgba(6,182,212,.15); border:1px solid rgba(6,182,212,.3);
+                             color:var(--accent-li); font-size:.7rem; font-weight:600;
+                             padding:2px 8px; border-radius:20px; margin-bottom:8px; }
+.citations { margin-top:12px; display:flex; flex-direction:column; gap:6px; }
+.citation  { background:rgba(15,15,26,.6); border:1px solid var(--border); border-radius:8px;
+             padding:8px 12px; font-size:.75rem; color:var(--text2); display:flex; gap:8px; }
+.citation-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); margin-top:4px; flex-shrink:0; }
+.reasoning { margin-top:10px; }
+.reasoning summary { font-size:.75rem; color:var(--text3); cursor:pointer; user-select:none; }
+.reasoning summary:hover { color:var(--text2); }
+.reasoning ol { margin-top:6px; padding-left:18px; font-size:.75rem; color:var(--text3); line-height:1.7; }
+.typing-indicator { display:flex; align-items:center; gap:4px; padding:14px 18px; }
+.dot { width:6px; height:6px; border-radius:50%; background:var(--text3);
+       animation:bounce .8s infinite; }
+.dot:nth-child(2){animation-delay:.15s} .dot:nth-child(3){animation-delay:.3s}
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+.chat-input-wrap { padding:16px 24px; border-top:1px solid var(--border); }
+.chat-input-row { display:flex; gap:10px; background:var(--bg3); border:1px solid var(--border);
+                  border-radius:var(--radius); padding:8px 8px 8px 16px; align-items:flex-end;
+                  transition:border-color .2s; }
+.chat-input-row:focus-within { border-color:var(--primary); box-shadow:var(--glow); }
+.chat-input-row textarea { flex:1; background:transparent; border:none; outline:none; color:var(--text);
+                            font-size:.88rem; resize:none; line-height:1.5; max-height:120px; overflow-y:auto; }
+.chat-input-row textarea::placeholder { color:var(--text3); }
+.send-btn { width:38px; height:38px; border-radius:10px; border:none; cursor:pointer;
+            background:linear-gradient(135deg,var(--primary),var(--accent));
+            color:#fff; font-size:1rem; display:flex; align-items:center; justify-content:center;
+            transition:opacity .2s; flex-shrink:0; }
+.send-btn:hover { opacity:.85; }
+.send-btn:disabled { opacity:.4; cursor:not-allowed; }
+.input-hints { display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+.hint-chip { font-size:.72rem; color:var(--text3); background:var(--glass); border:1px solid var(--border);
+             border-radius:20px; padding:3px 10px; cursor:pointer; transition:all .15s; }
+.hint-chip:hover { color:var(--text2); border-color:var(--text3); }
+
+/* ── Graph Explorer page ── */
+.graph-toolbar { display:flex; align-items:center; gap:12px; padding:14px 24px;
+                 border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.graph-toolbar h2 { font-size:1rem; font-weight:700; }
+.graph-search { flex:1; min-width:180px; max-width:320px; display:flex; gap:8px; }
+.graph-search input { flex:1; background:var(--bg3); border:1px solid var(--border); color:var(--text);
+                      border-radius:var(--radius-sm); padding:7px 12px; font-size:.82rem; outline:none;
+                      transition:border-color .2s; }
+.graph-search input:focus { border-color:var(--primary); }
+.btn { padding:6px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); cursor:pointer;
+       font-size:.8rem; font-weight:600; transition:all .2s; color:var(--text2);
+       background:var(--glass); }
+.btn:hover { background:var(--primary); color:#fff; border-color:var(--primary); }
+.btn.primary { background:var(--primary); color:#fff; border-color:var(--primary); }
+.btn.primary:hover { opacity:.85; }
+.graph-canvas { flex:1; position:relative; overflow:hidden; }
+#graph-svg { width:100%; height:100%; }
+.graph-legend { position:absolute; bottom:16px; left:16px; background:rgba(15,15,26,.9);
+                border:1px solid var(--border); border-radius:var(--radius-sm);
+                padding:12px; display:flex; flex-direction:column; gap:6px; backdrop-filter:blur(10px); }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:.72rem; color:var(--text2); }
+.legend-dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.graph-tooltip { position:absolute; background:rgba(15,15,26,.95); border:1px solid var(--border);
+                 border-radius:var(--radius-sm); padding:10px 14px; font-size:.78rem;
+                 pointer-events:none; display:none; max-width:220px; line-height:1.5;
+                 backdrop-filter:blur(10px); z-index:10; }
+.graph-info-panel { position:absolute; top:16px; right:16px; width:260px;
+                    background:rgba(15,15,26,.9); border:1px solid var(--border);
+                    border-radius:var(--radius); padding:16px; backdrop-filter:blur(10px);
+                    display:none; }
+.graph-info-panel h4 { font-size:.88rem; font-weight:700; margin-bottom:8px; }
+.info-row { display:flex; justify-content:space-between; font-size:.75rem; margin-top:5px; }
+.info-row .k { color:var(--text3); }
+.info-row .v { color:var(--text2); font-weight:500; }
+
+/* ── Dashboard page ── */
+.dash-header { padding:24px 28px 18px; border-bottom:1px solid var(--border); }
+.dash-header h1 { font-size:1.3rem; font-weight:700; }
+.dash-header p { font-size:.82rem; color:var(--text2); margin-top:4px; }
+.dash-body { flex:1; overflow-y:auto; padding:24px 28px; display:flex; flex-direction:column; gap:24px; }
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; }
+.stat-card { background:var(--glass); border:1px solid var(--border); border-radius:var(--radius);
+             padding:20px; position:relative; overflow:hidden; }
+.stat-card::before { content:''; position:absolute; inset:0;
+                     background:linear-gradient(135deg,rgba(124,58,237,.06),transparent); }
+.stat-card .icon { font-size:1.6rem; margin-bottom:10px; }
+.stat-card .value { font-size:1.8rem; font-weight:800; margin-bottom:4px; }
+.stat-card .label { font-size:.75rem; color:var(--text2); }
+.stat-card .delta { font-size:.7rem; margin-top:6px; color:var(--green); }
+.section-title { font-size:.95rem; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.api-table { width:100%; border-collapse:collapse; font-size:.8rem; }
+.api-table thead tr { background:var(--bg3); }
+.api-table th { padding:10px 14px; text-align:left; color:var(--text2); font-weight:600;
+                font-size:.72rem; letter-spacing:.04em; text-transform:uppercase; }
+.api-table td { padding:10px 14px; border-bottom:1px solid var(--border); color:var(--text); }
+.api-table tr:hover td { background:var(--glass); }
+.badge { display:inline-flex; padding:2px 8px; border-radius:20px; font-size:.68rem; font-weight:700; }
+.badge.GET   { background:rgba(16,185,129,.15); color:#34D399; border:1px solid rgba(16,185,129,.3); }
+.badge.POST  { background:rgba(124,58,237,.15); color:var(--primary-li); border:1px solid rgba(124,58,237,.3); }
+.pipeline-steps { display:flex; gap:0; flex-wrap:wrap; }
+.pipe-step { background:var(--glass); border:1px solid var(--border); border-radius:var(--radius-sm);
+             padding:14px 18px; position:relative; flex:1; min-width:130px; }
+.pipe-step::after { content:'→'; position:absolute; right:-14px; top:50%; transform:translateY(-50%);
+                    color:var(--text3); font-size:1rem; z-index:1; }
+.pipe-step:last-child::after { display:none; }
+.pipe-step .p-num { font-size:.65rem; font-weight:700; color:var(--primary-li);
+                    text-transform:uppercase; letter-spacing:.08em; }
+.pipe-step .p-name { font-size:.85rem; font-weight:700; margin-top:3px; }
+.pipe-step .p-desc { font-size:.72rem; color:var(--text3); margin-top:4px; }
+
+/* ── Settings / Docs page ── */
+.docs-body { flex:1; overflow-y:auto; padding:28px; display:flex; flex-direction:column; gap:20px; }
+.doc-section { background:var(--glass); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
+.doc-section h3 { font-size:1rem; font-weight:700; margin-bottom:12px; color:var(--primary-li); }
+.doc-section p { font-size:.83rem; line-height:1.7; color:var(--text2); }
+.doc-section ul { padding-left:20px; margin-top:8px; }
+.doc-section ul li { font-size:.82rem; line-height:1.8; color:var(--text2); }
+.code-block { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm);
+              padding:14px; font-family:'Fira Code','JetBrains Mono',monospace; font-size:.78rem;
+              color:#A5F3FC; overflow-x:auto; margin-top:10px; line-height:1.7; white-space:pre; }
+.env-table { width:100%; border-collapse:collapse; margin-top:10px; font-size:.8rem; }
+.env-table th { text-align:left; padding:6px 10px; color:var(--text3); font-size:.7rem;
+                text-transform:uppercase; letter-spacing:.05em; }
+.env-table td { padding:7px 10px; border-bottom:1px solid var(--border); }
+.env-table td:first-child { font-family:monospace; color:var(--accent-li); }
+.env-table td:last-child { color:var(--text3); font-size:.75rem; }
+
+/* ── Toast ── */
+.toast { position:fixed; bottom:30px; right:30px; background:var(--bg3); border:1px solid var(--border);
+         border-radius:var(--radius-sm); padding:12px 20px; font-size:.82rem; color:var(--text);
+         z-index:999; transform:translateY(80px); opacity:0; transition:all .3s;
+         display:flex; align-items:center; gap:8px; }
+.toast.show { transform:none; opacity:1; }
+.toast.success { border-color:var(--green); }
+.toast.error   { border-color:var(--red); }
+
+/* ── Loading overlay ── */
+.loading-bar { height:2px; background:linear-gradient(90deg,var(--primary),var(--accent));
+               position:fixed; top:60px; left:0; width:0; transition:width 0.3s; z-index:200; }
+
+/* ── Scrollbar global ── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--bg3); border-radius:3px; }
+
+/* ── Utility ── */
+.flex { display:flex; } .gap8 { gap:8px; } .mt8 { margin-top:8px; }
+.text-sm { font-size:.78rem; } .text-xs { font-size:.72rem; }
+.text-muted { color:var(--text2); } .text-dim { color:var(--text3); }
+.bold { font-weight:700; }
+
+/* ── Responsive collapse for narrow screens ── */
+@media (max-width: 720px) {
+  .app { grid-template-columns:1fr; }
+  .sidebar { display:none; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-bar" id="loadingBar"></div>
+<div class="toast" id="toast"></div>
+
+<div class="app">
+
+  <!-- ── TOP BAR ── -->
+  <header class="topbar">
+    <a class="logo" href="#">
+      <div class="logo-icon">🧠</div>
+      <span class="logo-text">GraphRAG Intelligence</span>
+    </a>
+    <div class="topbar-spacer"></div>
+    <div class="status-badge" id="apiStatus">
+      <div class="status-dot"></div>
+      <span>Checking API…</span>
+    </div>
+    <button class="theme-btn" onclick="copyApiUrl()">📋 API: localhost:8000</button>
+  </header>
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="nav-section">Navigation</div>
+    <div class="nav-item active" data-page="chat"    onclick="showPage('chat',this)">
+      <span class="icon">💬</span> Query Intelligence
+    </div>
+    <div class="nav-item" data-page="graph" onclick="showPage('graph',this)">
+      <span class="icon">🕸️</span> Graph Explorer
+    </div>
+    <div class="nav-item" data-page="dashboard" onclick="showPage('dashboard',this)">
+      <span class="icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" data-page="docs" onclick="showPage('docs',this)">
+      <span class="icon">📖</span> Docs & Testing
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="stats-mini" id="sidebarStats">
+        <div class="stat-card-mini"><div class="n" id="s-nodes">—</div><div class="l">Entities</div></div>
+        <div class="stat-card-mini"><div class="n" id="s-edges">—</div><div class="l">Relations</div></div>
+        <div class="stat-card-mini"><div class="n" id="s-comm">—</div><div class="l">Communities</div></div>
+        <div class="stat-card-mini"><div class="n">v1.0</div><div class="l">Version</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="main">
+
+    <!-- ════════ PAGE: CHAT ════════ -->
+    <div class="page active" id="page-chat">
+      <div class="chat-header">
+        <h1>🔍 Knowledge Intelligence Query</h1>
+        <p>Ask multi-hop questions — GraphRAG traverses the knowledge graph for deep, cited answers.</p>
+        <div class="mode-pills">
+          <div class="mode-pill active" data-mode="auto"   onclick="setMode('auto',this)">🤖 Auto</div>
+          <div class="mode-pill" data-mode="local"  onclick="setMode('local',this)">📍 Local (entity-anchored)</div>
+          <div class="mode-pill" data-mode="global" onclick="setMode('global',this)">🌐 Global (community-wide)</div>
+          <div class="mode-pill" data-mode="hybrid" onclick="setMode('hybrid',this)">⚡ Hybrid</div>
+        </div>
+      </div>
+
+      <div class="chat-msgs" id="chatMsgs">
+        <!-- welcome card -->
+        <div class="msg bot">
+          <div class="msg-avatar">🧠</div>
+          <div class="msg-bubble">
+            <strong>Welcome to GraphRAG Intelligence Platform</strong><br><br>
+            I use a <em>Knowledge Graph + Vector Search hybrid</em> to answer complex, multi-hop questions 
+            with full citations and reasoning paths — far beyond what standard RAG can do.
+            <br><br>
+            <strong>Try asking:</strong>
+            <ul style="margin-top:6px;padding-left:18px;font-size:.82rem;line-height:1.8">
+              <li>What are the relationships between the key entities in this domain?</li>
+              <li>Which companies are most connected in the knowledge graph?</li>
+              <li>Summarize the main themes across all documents.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-wrap">
+        <div class="input-hints">
+          <span class="hint-chip" onclick="fillHint(this)">What entities are most connected?</span>
+          <span class="hint-chip" onclick="fillHint(this)">Summarize the key themes</span>
+          <span class="hint-chip" onclick="fillHint(this)">Who are the main actors and relationships?</span>
+          <span class="hint-chip" onclick="fillHint(this)">What patterns appear across all documents?</span>
+        </div>
+        <div class="chat-input-row">
+          <textarea id="chatInput" placeholder="Ask a multi-hop question about your knowledge base…"
+            rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendQuery()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ PAGE: GRAPH EXPLORER ════════ -->
+    <div class="page" id="page-graph">
+      <div class="graph-toolbar">
+        <h2>🕸️ Knowledge Graph Explorer</h2>
+        <div class="graph-search">
+          <input type="text" id="graphSearchInput" placeholder="Entity name…" />
+          <button class="btn primary" onclick="loadGraph()">Explore</button>
+        </div>
+        <select id="depthSelect" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);
+                border-radius:var(--radius-sm);padding:6px 10px;font-size:.8rem;outline:none;">
+          <option value="1">Depth 1</option>
+          <option value="2" selected>Depth 2</option>
+          <option value="3">Depth 3</option>
+        </select>
+        <button class="btn" onclick="resetGraph()">🔄 Reset</button>
+        <button class="btn" onclick="centerGraph()">⊕ Center</button>
+      </div>
+      <div class="graph-canvas" id="graphCanvas">
+        <svg id="graph-svg"></svg>
+        <div class="graph-legend">
+          <div style="font-size:.7rem;font-weight:700;color:var(--text2);margin-bottom:4px;">Node Types</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div>ORGANIZATION</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#06B6D4"></div>PERSON</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div>LOCATION</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>CONCEPT</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#F43F5E"></div>EVENT</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#8B5CF6"></div>TECHNOLOGY</div>
+        </div>
+        <div class="graph-tooltip" id="graphTooltip"></div>
+        <div class="graph-info-panel" id="graphInfoPanel">
+          <h4 id="infoName">—</h4>
+          <div class="info-row"><span class="k">Type</span><span class="v" id="infoType">—</span></div>
+          <div class="info-row"><span class="k">ID</span><span class="v" id="infoId" style="font-size:.68rem;font-family:monospace">—</span></div>
+          <div class="info-row"><span class="k">Description</span></div>
+          <p id="infoDesc" style="font-size:.73rem;color:var(--text3);margin-top:4px;line-height:1.5">—</p>
+          <button class="btn primary" style="width:100%;margin-top:12px;font-size:.78rem"
+                  onclick="expandNode()">Expand Neighborhood</button>
+        </div>
+        <div id="graphPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;
+             justify-content:center;flex-direction:column;gap:12px;color:var(--text3);">
+          <div style="font-size:3rem">🕸️</div>
+          <div style="font-size:.9rem;font-weight:600">Enter an entity name above to explore the graph</div>
+          <div style="font-size:.78rem">Nodes are color-coded by type • Drag to rearrange • Scroll to zoom</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ PAGE: DASHBOARD ════════ -->
+    <div class="page" id="page-dashboard">
+      <div class="dash-header">
+        <h1>📊 System Dashboard</h1>
+        <p>Real-time knowledge graph statistics, pipeline overview and API reference.</p>
+      </div>
+      <div class="dash-body">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="icon">🔷</div>
+            <div class="value" id="d-nodes" style="color:var(--primary-li)">—</div>
+            <div class="label">Entity Nodes</div>
+            <div class="delta">↑ Neo4j knowledge graph</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🔗</div>
+            <div class="value" id="d-edges" style="color:var(--accent-li)">—</div>
+            <div class="label">Relation Edges</div>
+            <div class="delta">↑ Extracted by LLM</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🏘️</div>
+            <div class="value" id="d-comm" style="color:var(--green)">—</div>
+            <div class="label">Communities</div>
+            <div class="delta">↑ Leiden algorithm</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">⚡</div>
+            <div class="value" id="d-status" style="color:var(--yellow)">—</div>
+            <div class="label">API Health</div>
+            <div class="delta">FastAPI + Neo4j</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">🔄 4-Stage DVC Pipeline</div>
+          <div class="pipeline-steps">
+            <div class="pipe-step">
+              <div class="p-num">Stage 1</div>
+              <div class="p-name">📄 Ingest</div>
+              <div class="p-desc">Chunk documents with overlap</div>
+            </div>
+            <div class="pipe-step">
+              <div class="p-num">Stage 2</div>
+              <div class="p-name">🤖 Extract</div>
+              <div class="p-desc">LLM entity/relation extraction</div>
+            </div>
+            <div class="pipe-step">
+              <div class="p-num">Stage 3</div>
+              <div class="p-name">🕸️ Build Graph</div>
+              <div class="p-desc">Neo4j + Leiden communities</div>
+            </div>
+            <div class="pipe-step">
+              <div class="p-num">Stage 4</div>
+              <div class="p-name">🔍 Index</div>
+              <div class="p-desc">FAISS vector index</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">🌐 REST API Endpoints</div>
+          <table class="api-table">
+            <thead><tr>
+              <th>Method</th><th>Endpoint</th><th>Description</th><th>Params</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><span class="badge POST">POST</span></td><td>/query</td>
+                  <td>Ask a question — returns answer + citations</td>
+                  <td style="font-size:.72rem;color:var(--text3)">question, search_mode, top_k, stream</td></tr>
+              <tr><td><span class="badge GET">GET</span></td><td>/graph/explore</td>
+                  <td>Traverse entity neighborhood</td>
+                  <td style="font-size:.72rem;color:var(--text3)">entity_name, depth (1–5)</td></tr>
+              <tr><td><span class="badge GET">GET</span></td><td>/health</td>
+                  <td>System health check</td><td style="font-size:.72rem;color:var(--text3)">—</td></tr>
+              <tr><td><span class="badge GET">GET</span></td><td>/metrics</td>
+                  <td>Prometheus metrics</td><td style="font-size:.72rem;color:var(--text3)">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="section-title">🛠️ Technology Stack</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+            <div class="stat-card"><b>🧠 LLM</b><br><span class="text-sm text-muted mt8">Claude Sonnet 4.6<br>Adaptive Thinking</span></div>
+            <div class="stat-card"><b>🗄️ Graph DB</b><br><span class="text-sm text-muted mt8">Neo4j 5.x<br>Parameterized Cypher</span></div>
+            <div class="stat-card"><b>🔍 Vector</b><br><span class="text-sm text-muted mt8">FAISS + OpenAI<br>text-embedding-3-small</span></div>
+            <div class="stat-card"><b>⚙️ Community</b><br><span class="text-sm text-muted mt8">Leiden Algorithm<br>graspologic</span></div>
+            <div class="stat-card"><b>🚀 API</b><br><span class="text-sm text-muted mt8">FastAPI + Uvicorn<br>SSE Streaming</span></div>
+            <div class="stat-card"><b>📈 MLOps</b><br><span class="text-sm text-muted mt8">MLflow + DVC<br>Prometheus + Grafana</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ PAGE: DOCS ════════ -->
+    <div class="page" id="page-docs">
+      <div class="chat-header">
+        <h1>📖 Docs, Setup & Manual Testing</h1>
+        <p>Everything you need to integrate, test and extend the GraphRAG platform.</p>
+      </div>
+      <div class="docs-body">
+
+        <div class="doc-section">
+          <h3>🚀 Quick Start</h3>
+          <p>Run the complete stack in 3 steps:</p>
+          <div class="code-block"># 1. Clone and setup
+git clone https://github.com/PAMIDIROHIT/-Knowledge-Graph-Augmented-Retrieval-System.git
+cd Knowledge-Graph-Augmented-Retrieval-System/graphrag
+
+# 2. Start infrastructure (Neo4j, MLflow, monitoring)
+docker-compose up -d neo4j mlflow prometheus grafana
+
+# 3. Start the FastAPI server
+source .venv/bin/activate
+uvicorn src.api.main:app --reload --port 8000
+# Open: http://localhost:8000
+# Open this frontend: open frontend/index.html</div>
+        </div>
+
+        <div class="doc-section">
+          <h3>🔑 Environment Variables</h3>
+          <p>Copy <code style="color:var(--accent-li)">.env.example</code> → <code style="color:var(--accent-li)">.env</code> and fill in:</p>
+          <table class="env-table">
+            <tr><th>Variable</th><th>Example</th><th>Purpose</th></tr>
+            <tr><td>ANTHROPIC_API_KEY</td><td>sk-ant-…</td><td>Claude LLM for extraction & QA</td></tr>
+            <tr><td>OPENAI_API_KEY</td><td>sk-…</td><td>text-embedding-3-small for FAISS</td></tr>
+            <tr><td>NEO4J_URI</td><td>bolt://localhost:7687</td><td>Graph database connection</td></tr>
+            <tr><td>NEO4J_PASSWORD</td><td>graphrag_password</td><td>Neo4j auth</td></tr>
+            <tr><td>MLFLOW_TRACKING_URI</td><td>http://localhost:5001</td><td>Experiment tracking</td></tr>
+          </table>
+        </div>
+
+        <div class="doc-section">
+          <h3>🧪 Manual Testing — Step by Step</h3>
+          <p>Test each component independently:</p>
+          <div class="code-block"># ── Unit tests (61 tests) ──────────────────────────
+pytest tests/ -v
+
+# ── Run the full 4-stage pipeline ──────────────────
+# Put your documents in data/raw/
+dvc repro
+
+# ── Or run stages individually ─────────────────────
+python pipelines/ingest.py --config params.yaml
+python pipelines/extract.py --config params.yaml
+python pipelines/build_graph.py --config params.yaml
+python pipelines/index.py --config params.yaml
+
+# ── Test API manually with curl ────────────────────
+# Health check
+curl http://localhost:8000/health | python -m json.tool
+
+# Query (local strategy)
+curl -X POST http://localhost:8000/query \
+  -H "Content-Type: application/json" \
+  -d '{"question":"What are the key entities?","search_mode":"local"}' \
+  | python -m json.tool
+
+# Graph explore
+curl "http://localhost:8000/graph/explore?entity_name=Microsoft&depth=2" \
+  | python -m json.tool
+
+# ── Run evaluation benchmark ───────────────────────
+python eval/benchmark.py
+python eval/multihop_qa.py  # quality gate: must score ≥ 0.70</div>
+        </div>
+
+        <div class="doc-section">
+          <h3>🔗 Python Integration Example</h3>
+          <p>Use the API from any Python backend:</p>
+          <div class="code-block">import requests
+
+API = "http://localhost:8000"
+
+# Simple query
+resp = requests.post(f"{API}/query", json={
+    "question": "What companies are related to AI research?",
+    "search_mode": "hybrid",
+    "top_k": 5
+})
+data = resp.json()
+print(data["answer"])
+for c in data["citations"]:
+    print(f"  [{c['source']}] {c['text'][:80]}…")</div>
+        </div>
+
+        <div class="doc-section">
+          <h3>🌐 JavaScript / Frontend Integration</h3>
+          <div class="code-block">// Query with fetch
+const res = await fetch('http://localhost:8000/query', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    question: 'What are the main themes?',
+    search_mode: 'global'
+  })
+});
+const data = await res.json();
+console.log(data.answer, data.citations);
+
+// Streaming response (SSE)
+const res = await fetch('http://localhost:8000/query', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ question: '...', search_mode: 'auto', stream: true })
+});
+const reader = res.body.getReader();
+// read chunks: data: {"token": "..."}</div>
+        </div>
+
+        <div class="doc-section">
+          <h3>🐳 Docker Deployment</h3>
+          <div class="code-block"># Full stack with monitoring
+docker-compose up -d
+
+# Services:
+#  API        → http://localhost:8000
+#  Neo4j      → http://localhost:7474  (neo4j/graphrag_password)
+#  MLflow     → http://localhost:5001
+#  Prometheus → http://localhost:9090
+#  Grafana    → http://localhost:3000  (admin/admin)</div>
+        </div>
+
+      </div>
+    </div>
+
+  </main><!-- /.main -->
+</div><!-- /.app -->
+
+<script>
+// ══════════════════════════════════════════════════════════
+// Configuration
+// ══════════════════════════════════════════════════════════
+const API_BASE = 'http://localhost:8000';
+let currentMode = 'auto';
+let selectedNode = null;
+let d3Simulation = null;
+
+// ══════════════════════════════════════════════════════════
+// Navigation
+// ══════════════════════════════════════════════════════════
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  if (id === 'dashboard') loadDashboard();
+}
+
+// ══════════════════════════════════════════════════════════
+// API Health Check
+// ══════════════════════════════════════════════════════════
+async function checkHealth() {
+  const el = document.getElementById('apiStatus');
+  try {
+    const r = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(3000) });
+    const d = await r.json();
+    const ok = d.status === 'healthy' || r.ok;
+    el.innerHTML = `<div class="status-dot" style="background:${ok ? 'var(--green)' : 'var(--yellow)'}"></div>
+                    <span>API ${ok ? 'Online' : 'Degraded'}</span>`;
+    return d;
+  } catch {
+    el.innerHTML = `<div class="status-dot" style="background:var(--red)"></div><span>API Offline</span>`;
+    return null;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// Dashboard
+// ══════════════════════════════════════════════════════════
+async function loadDashboard() {
+  const h = await checkHealth();
+  if (h) {
+    const stats = h.graph_stats || {};
+    const nodes = stats.nodes ?? '—', edges = stats.edges ?? '—', comm = stats.communities ?? '—';
+    setStats(nodes, edges, comm, h.status || '—');
+  }
+}
+
+function setStats(nodes, edges, comm, status) {
+  const fmt = v => typeof v === 'number' ? v.toLocaleString() : v;
+  document.getElementById('d-nodes').textContent = fmt(nodes);
+  document.getElementById('d-edges').textContent = fmt(edges);
+  document.getElementById('d-comm').textContent  = fmt(comm);
+  document.getElementById('d-status').textContent = status === 'healthy' ? '✅' : (status === '—' ? '—' : '⚠️');
+  document.getElementById('s-nodes').textContent = fmt(nodes);
+  document.getElementById('s-edges').textContent = fmt(edges);
+  document.getElementById('s-comm').textContent  = fmt(comm);
+}
+
+// ══════════════════════════════════════════════════════════
+// Chat
+// ══════════════════════════════════════════════════════════
+function setMode(m, el) {
+  currentMode = m;
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function fillHint(el) {
+  document.getElementById('chatInput').value = el.textContent;
+  autoResize(document.getElementById('chatInput'));
+}
+
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendQuery(); }
+}
+
+function appendMsg(role, html) {
+  const msgs = document.getElementById('chatMsgs');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `<div class="msg-avatar">${role === 'user' ? '👤' : '🧠'}</div>
+                   <div class="msg-bubble">${html}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div.querySelector('.msg-bubble');
+}
+
+function addTypingIndicator() {
+  const msgs = document.getElementById('chatMsgs');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typingIndicator';
+  div.innerHTML = `<div class="msg-avatar">🧠</div>
+    <div class="msg-bubble"><div class="typing-indicator">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function sendQuery() {
+  const input = document.getElementById('chatInput');
+  const q = input.value.trim();
+  if (!q) return;
+
+  input.value = ''; autoResize(input);
+  document.getElementById('sendBtn').disabled = true;
+  startLoading();
+
+  appendMsg('user', escapeHtml(q));
+  addTypingIndicator();
+
+  try {
+    const r = await fetch(`${API_BASE}/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q, search_mode: currentMode, top_k: 5 })
+    });
+
+    document.getElementById('typingIndicator')?.remove();
+
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({ detail: r.statusText }));
+      appendMsg('bot', `<span style="color:var(--red)">⚠️ Error ${r.status}: ${escapeHtml(err.detail || 'Unknown error')}</span>`);
+      return;
+    }
+
+    const d = await r.json();
+    const stratIcon = { local:'📍', global:'🌐', hybrid:'⚡', auto:'🤖' };
+    const icon = stratIcon[d.retrieval_strategy] || '🤖';
+
+    const citHtml = (d.citations || []).map(c =>
+      `<div class="citation"><div class="citation-dot"></div>
+       <div><b>${escapeHtml(c.source || '')}</b> — ${escapeHtml((c.text || '').substring(0,120))}…</div></div>`
+    ).join('');
+
+    const reasonHtml = d.reasoning_path?.length ? `
+      <details class="reasoning">
+        <summary>🔍 View reasoning path (${d.reasoning_path.length} steps)</summary>
+        <ol>${d.reasoning_path.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ol>
+      </details>` : '';
+
+    appendMsg('bot', `
+      <div class="strategy-tag">${icon} ${(d.retrieval_strategy||'auto').toUpperCase()} · ${Math.round(d.latency_ms||0)}ms</div>
+      ${escapeHtml(d.answer||'').replace(/\n/g,'<br>')}
+      ${citHtml ? `<div class="citations">${citHtml}</div>` : ''}
+      ${reasonHtml}
+    `);
+
+  } catch (err) {
+    document.getElementById('typingIndicator')?.remove();
+    appendMsg('bot', `<span style="color:var(--red)">⚠️ Cannot reach API at <code>${API_BASE}</code>.<br>
+      Make sure the server is running: <code>uvicorn src.api.main:app --reload</code></span>`);
+  } finally {
+    document.getElementById('sendBtn').disabled = false;
+    stopLoading();
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// Graph Explorer (D3.js force-directed)
+// ══════════════════════════════════════════════════════════
+const NODE_COLORS = {
+  ORGANIZATION:'#7C3AED', PERSON:'#06B6D4', LOCATION:'#10B981',
+  CONCEPT:'#F59E0B', EVENT:'#F43F5E', TECHNOLOGY:'#8B5CF6',
+  DEFAULT:'#64748B'
+};
+
+async function loadGraph() {
+  const name = document.getElementById('graphSearchInput').value.trim();
+  if (!name) { showToast('Enter an entity name', 'error'); return; }
+  const depth = document.getElementById('depthSelect').value;
+  startLoading();
+
+  try {
+    const r = await fetch(`${API_BASE}/graph/explore?entity_name=${encodeURIComponent(name)}&depth=${depth}`);
+    if (!r.ok) {
+      const e = await r.json().catch(() => ({}));
+      showToast(e.detail || 'Entity not found', 'error'); return;
+    }
+    const d = await r.json();
+    document.getElementById('graphPlaceholder').style.display = 'none';
+    document.getElementById('graphInfoPanel').style.display = 'none';
+    renderGraph(d.nodes || [], d.edges || []);
+    showToast(`Loaded ${(d.nodes||[]).length} nodes, ${(d.edges||[]).length} edges`);
+  } catch {
+    showToast('API offline — cannot load graph', 'error');
+  } finally { stopLoading(); }
+}
+
+function renderGraph(nodes, edges) {
+  const canvas = document.getElementById('graphCanvas');
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  const svg = d3.select('#graph-svg');
+  svg.selectAll('*').remove();
+
+  const g = svg.append('g');
+
+  // Zoom
+  svg.call(d3.zoom().scaleExtent([0.2, 4]).on('zoom', e => g.attr('transform', e.transform)));
+
+  // Arrow markers
+  svg.append('defs').selectAll('marker').data(['end']).join('marker')
+    .attr('id','arrow').attr('viewBox','0 -5 10 10').attr('refX',22).attr('refY',0)
+    .attr('markerWidth',6).attr('markerHeight',6).attr('orient','auto')
+    .append('path').attr('d','M0,-5L10,0L0,5').attr('fill','rgba(255,255,255,0.15)');
+
+  // Links
+  const link = g.append('g').selectAll('line').data(edges).join('line')
+    .attr('stroke','rgba(255,255,255,0.12)').attr('stroke-width',1.5)
+    .attr('marker-end','url(#arrow)');
+
+  // Edge labels (on hover via tooltip)
+  const nodeById = Object.fromEntries(nodes.map(n => [n.id, n]));
+
+  // Nodes
+  const node = g.append('g').selectAll('g').data(nodes).join('g')
+    .attr('cursor','pointer')
+    .call(d3.drag().on('start', dragStart).on('drag', dragged).on('end', dragEnd))
+    .on('click', (event, d) => showNodeInfo(d))
+    .on('mouseover', showTooltip).on('mouseout', hideTooltip);
+
+  node.append('circle').attr('r', d => d.id?.startsWith('com_') ? 18 : 12)
+    .attr('fill', d => NODE_COLORS[d.type] || NODE_COLORS.DEFAULT)
+    .attr('stroke','rgba(255,255,255,0.2)').attr('stroke-width',1.5)
+    .style('filter','drop-shadow(0 0 6px rgba(124,58,237,0.4))');
+
+  node.append('text').text(d => (d.name||d.id||'').substring(0,14))
+    .attr('dy', 25).attr('text-anchor','middle')
+    .attr('font-size','10px').attr('fill','rgba(255,255,255,0.65)')
+    .attr('pointer-events','none');
+
+  // Simulation
+  const idSet = new Set(nodes.map(n => n.id));
+  const validEdges = edges.filter(e =>
+    idSet.has(e.source_id || e.source) && idSet.has(e.target_id || e.target)
+  ).map(e => ({ ...e, source: e.source_id || e.source, target: e.target_id || e.target }));
+
+  d3Simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(validEdges).id(d => d.id).distance(100))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collision', d3.forceCollide(30))
+    .on('tick', () => {
+      link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+      node.attr('transform', d => `translate(${d.x},${d.y})`);
+    });
+}
+
+function showTooltip(event, d) {
+  const tt = document.getElementById('graphTooltip');
+  tt.style.display = 'block';
+  tt.style.left = (event.offsetX + 14) + 'px';
+  tt.style.top  = (event.offsetY - 10) + 'px';
+  tt.innerHTML  = `<b>${escapeHtml(d.name || d.id)}</b><br>
+    <span style="color:var(--text3)">${d.type || ''}</span><br>
+    <span style="color:var(--text3);font-size:.7rem">${(d.description||'').substring(0,100)}</span>`;
+}
+function hideTooltip() { document.getElementById('graphTooltip').style.display = 'none'; }
+
+function showNodeInfo(d) {
+  selectedNode = d;
+  const panel = document.getElementById('graphInfoPanel');
+  panel.style.display = 'block';
+  document.getElementById('infoName').textContent = d.name || d.id;
+  document.getElementById('infoType').textContent = d.type || '—';
+  document.getElementById('infoId').textContent   = d.id || '—';
+  document.getElementById('infoDesc').textContent = d.description || '—';
+}
+
+function expandNode() {
+  if (!selectedNode) return;
+  document.getElementById('graphSearchInput').value = selectedNode.name || selectedNode.id;
+  loadGraph();
+}
+
+function resetGraph() {
+  d3.select('#graph-svg').selectAll('*').remove();
+  document.getElementById('graphPlaceholder').style.display = 'flex';
+  document.getElementById('graphInfoPanel').style.display = 'none';
+  document.getElementById('graphSearchInput').value = '';
+  if (d3Simulation) { d3Simulation.stop(); d3Simulation = null; }
+}
+
+function centerGraph() {
+  if (d3Simulation) d3Simulation.alpha(0.3).restart();
+}
+
+function dragStart(event, d) { if (!event.active) d3Simulation.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; }
+function dragged(event, d)   { d.fx=event.x; d.fy=event.y; }
+function dragEnd(event, d)   { if (!event.active) d3Simulation.alphaTarget(0); d.fx=null; d.fy=null; }
+
+// ══════════════════════════════════════════════════════════
+// Utilities
+// ══════════════════════════════════════════════════════════
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function startLoading() {
+  const b = document.getElementById('loadingBar');
+  b.style.width = '0'; requestAnimationFrame(() => { b.style.width = '70%'; });
+}
+function stopLoading() {
+  const b = document.getElementById('loadingBar');
+  b.style.width = '100%'; setTimeout(() => { b.style.width = '0'; }, 400);
+}
+
+let toastTimer;
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = (type === 'error' ? '⚠️ ' : '✅ ') + msg;
+  t.className = `toast show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function copyApiUrl() {
+  navigator.clipboard.writeText(API_BASE).then(() => showToast('API URL copied'));
+}
+
+// ══════════════════════════════════════════════════════════
+// Init
+// ══════════════════════════════════════════════════════════
+(async () => {
+  const health = await checkHealth();
+  if (health?.graph_stats) {
+    const s = health.graph_stats;
+    setStats(s.nodes, s.edges, s.communities, health.status);
+  }
+})();
+</script>
+</body>
+</html>
